@@ -19,7 +19,7 @@ export default function TOC() {
          Lab 3 </Link>
      </li>
      <li>
-      <Link href="/kambaz" id="wd-kambaz">
+      <Link href="/" id="wd-kambaz">
         Kambaz</Link>
      </li>
    </ul>
