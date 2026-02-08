@@ -14,10 +14,17 @@ import Flex from "./Flex";
 import MediaQueriesDemo from "./MediaQueriesDemo";
 import ReactIconsSampler from "./ReactIconsSampler";
 import Link from "next/link";
+import Container from 'react-bootstrap/Container'
+import BootstrapGrids from "./BootsrapGrids";
+import ScreenSizeLabel from "./ScreenSizeLabel";
+import BootstrapTables from "./BootstrapTables";
+import BootstrapLists from "./BootstrapLists";
+import BootstrapForms from "./BootstrapForms";
+import BootstrapNavigation from "./BootstrapNavigation";
 
 export default function Lab2() {
   return (
-    <div id="wd-lab2">
+    <Container>
       <h2>Lab 2 - Cascading Style Sheets</h2>
       <h3>Styling with the STYLE attribute</h3>
       <p>
@@ -78,5 +85,11 @@ export default function Lab2() {
       <ReactIconsSampler />
       <Link href="/labs/lab2/tailwind" id="wd-tailwind-link">
            Tailwind </Link>
-    </div>
+      <BootstrapGrids />
+      <ScreenSizeLabel />
+      <BootstrapTables />
+      <BootstrapLists />
+      <BootstrapForms />
+      <BootstrapNavigation />
+    </Container>
 );}
