@@ -4,6 +4,7 @@ import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import AssignmentHeaderButton from "./AssignmentHeaderButton";
 import { MdAssignment } from "react-icons/md"
+import Link from "next/link";
 
 export default function Assignments() {
   return (
@@ -20,28 +21,38 @@ export default function Assignments() {
                 <BsGripVertical className="me-2 fs-3" /> 
                 <MdAssignment className="me-2 fs-4" /> 
                 <div style={{ maxWidth: "65%" }}>
-                  <div>A1</div>
-                    <div className="small text-muted">
-                      <span className="text-danger">Multiple Modules</span>
-                      {" | "}
-                      <strong>Not available until</strong> May 10 at 12:00am
-                      {" | "}
-                      <strong>Due</strong> May 14 at 11:59pm
-                      {" | "}
-                      100 pts
-                    </div>
+                  <div>
+                    <Link href="/courses/1234/assignments/123"
+                      className="wd-assignment-link text-decoration-none text-dark">
+                      A1
+                    </Link>
                   </div>
-                <div className="ms-auto d-flex">
-                  <AssignmentControlButton />
+                  <div className="small text-muted">
+                    <span className="text-danger">Multiple Modules</span>
+                    {" | "}
+                    <strong>Not available until</strong> May 10 at 12:00am
+                    {" | "}
+                    <strong>Due</strong> May 14 at 11:59pm
+                    {" | "}
+                    100 pts
+                  </div>
                 </div>
+              <div className="ms-auto d-flex">
+                <AssignmentControlButton />
               </div>
+            </div>
             </ListGroupItem>
             <ListGroupItem className="wd-assignment p-3 ps-1">
               <div className="d-flex align-items-center">
                 <BsGripVertical className="me-2 fs-3" /> 
                 <MdAssignment className="me-2 fs-4" /> 
                 <div style={{ maxWidth: "65%" }}>
-                  <div>A2</div>
+                  <div>
+                    <Link href="/courses/1234/assignments/123"
+                      className="wd-assignment-link text-decoration-none text-dark">
+                      A2
+                    </Link>
+                  </div>
                     <div className="small text-muted">
                       <span className="text-danger">Multiple Modules</span>
                       {" | "}
@@ -62,7 +73,12 @@ export default function Assignments() {
                 <BsGripVertical className="me-2 fs-3" /> 
                 <MdAssignment className="me-2 fs-4" /> 
                 <div style={{ maxWidth: "65%" }}>
-                  <div>A3</div>
+                  <div>
+                    <Link href="/courses/1234/assignments/123"
+                      className="wd-assignment-link text-decoration-none text-dark">
+                      A3
+                    </Link>
+                  </div>
                     <div className="small text-muted">
                       <span className="text-danger">Multiple Modules</span>
                       {" | "}

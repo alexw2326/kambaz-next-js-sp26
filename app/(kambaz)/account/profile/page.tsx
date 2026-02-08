@@ -1,20 +1,20 @@
-import Link from "next/link";
+import { FormControl, FormSelect, Button } from "react-bootstrap";
 export default function Profile() {
   return (
     <div>
       <h3>Profile</h3>
-      <input defaultValue="alice" placeholder="username"/><br/>
-      <input defaultValue="123"   placeholder="password" type="password" /><br/>
-      <input defaultValue="Alice" placeholder="First Name" /><br/>
-      <input defaultValue="Wonderland" placeholder="Last Name" /><br/>
-      <input defaultValue="2000-01-01" type="date" /><br/>
-      <input defaultValue="alice@wonderland" type="email" /><br/>
-      <select defaultValue="USER" >
-        <option value="USER">User</option>
+      <FormControl className="w-25 m-1" value="alice"></FormControl>
+      <FormControl className="w-25 m-1" type="password" value="123"></FormControl>
+      <FormControl className="w-25 m-1" placeholder="First Name" defaultValue="Alice"></FormControl>
+      <FormControl className="w-25 m-1" placeholder="Last Name" defaultValue="Wonderland"></FormControl>
+      <FormControl className="w-25 m-1" type="date" value="2000-01-01"></FormControl>
+      <FormControl className="w-25 m-1" type="email" value="alice@wonderland.com"></FormControl>
+      <FormSelect className="w-25 m-1">
+        <option value="USER" defaultChecked>User</option>
         <option value="ADMIN">Admin</option>
         <option value="FACULTY">Faculty</option>
         <option value="STUDENT">Student</option>
-      </select><br/>
-      <Link href="signin" > Sign out </Link>
+      </FormSelect>
+      <Button className="btn-danger m-1" href="signin">Sign out</Button>
     </div>
 );}
