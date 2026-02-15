@@ -1,19 +1,30 @@
+"use client";
 import { Nav, NavItem, NavLink } from "react-bootstrap";
+import { usePathname } from "next/navigation";
 
 export default function TOC() {
+ const pathname = usePathname();
  return (
    <Nav variant="pills">
      <NavItem>
-       <NavLink href="/labs">Labs</NavLink>
+       <NavLink href="/labs" className={`nav-link ${pathname.endsWith("labs") ? "active" : ""}`}>
+        Labs
+       </NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="/labs/lab1">Lab 1</NavLink>
+       <NavLink href="/labs/lab1" className={`nav-link ${pathname.endsWith("lab1") ? "active" : ""}`}>
+        Lab 1
+       </NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="/labs/lab2">Lab 2</NavLink>
+       <NavLink href="/labs/lab2" className={`nav-link ${pathname.endsWith("lab2") ? "active" : ""}`}>
+        Lab 2
+       </NavLink>
      </NavItem>
      <NavItem>
-       <NavLink href="/labs/lab3">Lab 3</NavLink>
+       <NavLink href="/labs/lab3" className={`nav-link ${pathname.endsWith("lab3") ? "active" : ""}`}>
+        Lab 3
+       </NavLink>
      </NavItem>
      <NavItem>
        <NavLink href="/">Kambaz</NavLink>
