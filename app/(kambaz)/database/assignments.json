@@ -1,0 +1,11 @@
+[
+  { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101", "description": "Cool propulsion assignment", "points": 50, "dueDate": "2026-01-10", "availableFrom": "2026-01-01"},
+  { "_id": "A102", "title": "Combustion Analysis", "course": "RS101", "description": "Analysis of the combustion experiment", "points": 30, "dueDate": "2026-01-21", "availableFrom": "2026-01-11"},
+  { "_id": "A103", "title": "Nozzle Design Project", "course": "RS101", "description": "Final project for the nozzle design", "points": 200, "dueDate": "2026-01-20", "availableFrom": "2026-04-20" },
+  { "_id": "A201", "title": "Aerodynamics Quiz", "course": "RS102", "description": "Quiz on previous lecture of aerodynamics", "points": 20, "dueDate": "2026-03-04", "availableFrom": "2026-02-27" },
+  { "_id": "A202", "title": "Flow Analysis", "course": "RS102", "description": "Analysis of the flow experiment", "points": 75, "dueDate": "2026-01-26", "availableFrom": "2026-01-02" },
+  { "_id": "A203", "title": "Heating Analysis", "course": "RS102", "description": "Analysis of the heating experiment", "points": 10, "dueDate": "2026-04-10", "availableFrom": "2026-04-01" },
+  { "_id": "A301", "title": "Structural Design Task", "course": "RS103", "description": "Task to test the structural design", "points": 5, "dueDate": "2026-04-01", "availableFrom": "2026-03-01" },
+  { "_id": "A302", "title": "Orbital Calculations", "course": "RS103", "description": "Calculations for hitting orbit", "points": 25, "dueDate": "2026-03-10", "availableFrom": "2026-03-03" },
+  { "_id": "A303", "title": "Systems Engineering Exam", "course": "RS103", "description": "Final System Engineering exam", "points": 100, "dueDate": "2026-04-24", "availableFrom": "2026-04-23" }
+]

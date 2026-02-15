@@ -30,7 +30,7 @@ export default function ModulesControls() {
          </DropdownItem>
        </DropdownMenu>
      </Dropdown>
-     <Button variant="danger" size="lg" className="me-1 float-end" id="wd-view-progress">View Progress</Button>
-     <Button variant="danger" size="lg" className="me-1 float-end" id="wd-collapse-all">Collapse All</Button>
+     <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-view-progress">View Progress</Button>
+     <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-collapse-all">Collapse All</Button>
    </div>
 );}

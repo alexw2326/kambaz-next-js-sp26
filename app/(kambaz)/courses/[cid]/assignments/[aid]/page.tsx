@@ -1,28 +1,37 @@
-import { FormControl, FormLabel, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormCheck, Button } from "react-bootstrap";
+"use client"
+import { FormControl, FormLabel, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormCheck, Button, ListGroupItem } from "react-bootstrap";
+import { useParams } from "next/navigation";
+import * as db from "../../../../database";
+import Link from "next/link";
 
 export default function AssignmentEditor() {
+  const { aid } = useParams();
+  const { cid } = useParams();
+  const assignment = db.assignments.find(
+    (assignment) => assignment._id === aid
+  );
+  if (!assignment) return <div>Assignment not found</div>;
   return (
     <div id="wd-assignments-editor">
       <FormLabel>Assignments</FormLabel>
-      <FormControl className="w-100 mb-2" value="A1" />
+      <ListGroupItem className="wd-assignment p-3 ps-1">
+        <div className="d-flex align-items-center">
+          <div style={{ maxWidth: "65%" }}>
+            <FormControl className="w-100 mb-2" value={`${assignment.title}`} />
+          </div>
+        </div>
+      </ListGroupItem>
       <FormControl 
         as="textarea"
         rows={8}
         className="w-100" 
         id="wd-description" 
-        value={`The assignment is available online 
-        Submit a link to the landing page of your Web application running on Netlify. 
-        The landing page should include the following: 
-        • Your full name and section
-        • Links to each of the lab assignments
-        • Link to the Kanbas application
-        • Links to all relevant source code repositories
-        The Kanbas application should include a link to navigate back to the landing page.`} />
+        value={`${assignment.description}`} />
       <br />
       <Row xs={1} md={5} className="g-4">
           <FormLabel column sm={2}> Points </FormLabel>
           <Col className="wd-assignment-stats" style={{ width: "300px" }}>
-            <FormControl type="number" value="100" />
+            <FormControl type="number" value={`${assignment.points}`} />
           </Col>
       </Row>
       <Dropdown className="me-2 p-1">
@@ -82,12 +91,16 @@ export default function AssignmentEditor() {
       <FormLabel>Assign to:</FormLabel>
       <FormControl className="w-50 mb-2" value="Everyone" />
       <FormLabel>Due</FormLabel>
-      <FormControl type="date" className="w-50 mb-2" value="2024-05-13" />
+      <FormControl type="date" className="w-50 mb-2" value={`${assignment.dueDate}`} />
       <FormLabel>Available from</FormLabel>
-      <FormControl type="date" className="w-50 mb-2" value="2024-05-06" />
+      <FormControl type="date" className="w-50 mb-2" value={`${assignment.availableFrom}`} />
       <FormLabel>Until</FormLabel>
-      <FormControl type="date" className="w-50 mb-2" value="2024-05-20" />
-      <Button className="m-2 btn-secondary" type="button">Cancel</Button>
-      <Button className="m-2 btn-danger" type="button">Save</Button>
+      <FormControl type="date" className="w-50 mb-2" value={`${assignment.dueDate}`} />
+      <Link href={`/courses/${cid}/assignments/`}>
+        <Button className="m-2 btn-secondary" type="button">Cancel</Button>
+      </Link>
+      <Link href={`/courses/${cid}/assignments/`}>
+        <Button className="m-2 btn-danger" type="button">Save</Button>
+      </Link>
     </div>
 );}
