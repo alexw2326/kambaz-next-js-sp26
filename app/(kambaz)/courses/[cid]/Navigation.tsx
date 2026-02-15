@@ -1,17 +1,32 @@
+"use client"
 import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 export default function CourseNavigation() {
+  const pathname = usePathname();
+  const { cid } = useParams();
+   const links = [
+    { label: "Home", path:`/courses/${cid}/home` },
+    { label: "Modules", path:`/courses/${cid}/modules` },
+    { label: "Piazza", path:`/courses/${cid}/piazza` },
+    { label: "Zoom", path:`/courses/${cid}/zoom` },
+    { label: "Assignments", path:`/courses/${cid}/assignments` },
+    { label: "Quizzes", path:`/courses/${cid}/quizzes` },
+    { label: "Grades", path:`/courses/${cid}/grades` },
+    { label: "People", path:`/courses/${cid}/people/table` },
+   ];
   return (
-    <div id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
-      <Link href="/courses/1234/home" className="list-group-item active border-0">Home</Link><br/>
-      <Link href="/courses/1234/modules" className="list-group-item text-danger border-0">Modules
-        </Link><br/>
-      <Link href="/courses/1234/piazza" className="list-group-item text-danger border-0">Piazza</Link><br/>
-      <Link href="/courses/1234/zoom" className="list-group-item text-danger border-0">Zoom</Link><br/>
-      <Link href="/courses/1234/assignments" className="list-group-item text-danger border-0">
-          Assignments</Link><br/>
-      <Link href="/courses/1234/quizzes" className="list-group-item text-danger border-0">Quizzes
-        </Link><br/>
-      <Link href="/courses/1234/grades" className="list-group-item text-danger border-0">Grades</Link><br/>
-      <Link href="/courses/1234/people/table" className="list-group-item text-danger border-0">People</Link><br/>
-    </div>
+    <ListGroup id="wd-courses-navigation" className="wd list-group fs-5 rounded-0">
+      {links.map((link) => (
+        <ListGroupItem key={link.path} as={Link} href={link.path}
+          className={`list-group-item border-0 ${
+            pathname.includes(link.path)
+              ? "active"
+              : "text-danger"
+          }`}
+        >
+          {link.label}
+        </ListGroupItem>
+      ))}
+    </ListGroup>
   );}
