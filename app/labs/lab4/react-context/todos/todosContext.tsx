@@ -1,37 +1,86 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useReducer, ReactNode } from "react";
 
-// Define the context state
-interface TodosContextState {
- count: number;
- increment: () => void;
- decrement: () => void;
+interface Todo {
+  id?: string;
+  title: string;
 }
 
-// Create the context
-const TodosContext = createContext<TodosContextState | undefined>(
- undefined,
-);
+interface State {
+  todos: Todo[];
+  todo: Todo;
+}
 
-// Create the provider component
+interface Action {
+  type: string;
+  payload?: any;
+}
+
+const initialState: State = {
+  todos: [
+    { id: "1", title: "Learn React" },
+    { id: "2", title: "Learn Node" },
+  ],
+  todo: { title: "Learn Mongo" },
+};
+
+const todosReducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "ADD_TODO":
+      return {
+        ...state,
+        todos: [
+          ...state.todos,
+          { ...action.payload, id: new Date().getTime().toString() },
+        ],
+        todo: { title: "" },
+      };
+    case "DELETE_TODO":
+      return {
+        ...state,
+        todos: state.todos.filter(
+          (todo) => todo.id !== action.payload
+        ),
+      };
+    case "UPDATE_TODO":
+      return {
+        ...state,
+        todos: state.todos.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
+        todo: { title: "" },
+      };
+    case "SET_TODO":
+      return {
+        ...state,
+        todo: action.payload,
+      };
+    default:
+      return state;
+  }
+};
+
+interface TodosContextType {
+  state: State;
+  dispatch: React.Dispatch<Action>;
+}
+
+const TodosContext = createContext<TodosContextType | undefined>(undefined);
+
 export const TodosProvider = ({ children }: { children: ReactNode }) => {
- const [count, setCount] = useState(0);
-
- const increment = () => setCount((prev) => prev + 1);
- const decrement = () => setCount((prev) => prev - 1);
-
- const value: TodosContextState = {
-   count,
-   increment,
-   decrement,
- };
-
- return (
-   <TodosContext.Provider value={value}>{children}</TodosContext.Provider>
- );
+  const [state, dispatch] = useReducer(todosReducer, initialState);
+  return (
+    <TodosContext.Provider value={{ state, dispatch }}>
+      {children}
+    </TodosContext.Provider>
+  );
 };
 
 export const useList = () => {
- const context = useContext(TodosContext);
- return context;
+  const context = useContext(TodosContext);
+  if (!context) {
+    throw new Error("useList must be used within TodosProvider");
+  }
+  return context;
 };
