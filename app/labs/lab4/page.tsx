@@ -8,10 +8,11 @@ import ObjectStateVariable from "./ObjectStateVariable";
 import ParentStateComponent from "./ParentStateComponent";
 import PassingDataOnEvent from "./PassingDataOnEvent";
 import PassingFunctions from "./PassingFunctions";
-import ReduxExamples from "./ReduxExamples/page";
 import StringStateVariables from "./StringStateVariables";
 import store from "./store";
 import { Provider } from "react-redux";
+import UrlEncoding from "./url-encoding/page";
+import Link from "next/link";
 
 export default function Lab4() {
     function sayHello() {
@@ -32,7 +33,10 @@ export default function Lab4() {
                 <ObjectStateVariable />
                 <ArrayStateVariable />
                 <ParentStateComponent />
-                <ReduxExamples />
+                <UrlEncoding />
+                <Link href="./lab4/redux">Redux Examples</Link> <br />
+                <Link href="./lab4/react-context">React Context Examples</Link> <br />
+                <Link href="./lab4/zustand">Zustand Examples</Link>
             </div>
         </Provider>
     )

@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import helloReducer from "./ReduxExamples/HelloRedux/helloReducer";
-import counterReducer from "./ReduxExamples/CounterRedux/counterReducer";
-import addReducer from "./ReduxExamples/AddRedux/addReducer";
-import todosReducer from "./ReduxExamples/todos/todosReducer";
+import helloReducer from "./redux/hello/helloReducer";
+import counterReducer from "./redux/CounterRedux/counterReducer";
+import addReducer from "./redux/AddRedux/addReducer";
+import todosReducer from "./redux/todos/todosReducer";
 
 const store = configureStore({
-  reducer: { 
-    helloReducer,
+  reducer: { helloReducer,
     counterReducer,
     addReducer,
-    todosReducer, }});
+    todosReducer,
+   }});
 export type RootState = ReturnType<typeof store.getState>;
 export default store;

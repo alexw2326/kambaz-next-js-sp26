@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ListGroup } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import TodoForm from "./TodoForm";
 import TodoItem from "./TodoItem";
-import { useSelector } from "react-redux";
-import { ListGroup } from "react-bootstrap";
 import { RootState } from "../../store";
 export default function TodoList() {
   const { todos } = useSelector((state: RootState) => state.todosReducer);
@@ -18,4 +18,5 @@ export default function TodoList() {
       </ListGroup>
       <hr/>
     </div>
-);}
+);
+}
