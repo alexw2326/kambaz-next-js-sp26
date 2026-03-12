@@ -1,14 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { FormControl, FormLabel, Row, Col, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, FormCheck, Button, ListGroupItem } from "react-bootstrap";
 import { useParams } from "next/navigation";
-import * as db from "../../../../database";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store";
 import Link from "next/link";
 
 export default function AssignmentEditor() {
   const { aid } = useParams();
   const { cid } = useParams();
-  const assignment = db.assignments.find(
-    (assignment) => assignment._id === aid
+  const { assignments } = useSelector(
+    (state: RootState) => state.assignmentReducer
+  );
+  const assignment = assignments.find(
+    (assignment: any) => assignment._id === String(aid)
   );
   if (!assignment) return <div>Assignment not found</div>;
   return (
