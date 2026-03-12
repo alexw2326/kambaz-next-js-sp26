@@ -18,24 +18,30 @@ export default function Dashboard() {
     image: "/images/reactjs.jpg", description: "New Description"
   });
   const [showEnrolled, setShowEnrolled] = useState(true);
+  const currentUserRole = currentUser?.role;
+  const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
   return (
     <div id="wd-dashboard">
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
-        <h5>New Course
-          <button className="btn btn-primary float-end"
+      { adminPermission ? (
+        <span>
+          <h5>New Course
+            <button className="btn btn-primary float-end"
                 id="wd-add-new-course-click"
                 onClick={() => dispatch(addNewCourse(course))} > Add </button>
-          <button className="btn btn-warning float-end me-2"
+            <button className="btn btn-warning float-end me-2"
                 onClick={() => dispatch(updateCourse(course))} id="wd-update-course-click">
-            Update </button>
-          <button className="btn btn-primary float-end me-2"
-                onClick={() => setShowEnrolled(!showEnrolled)} id="wd-enrollments-course-click">
-            Enrollments </button>
-        </h5><br />
-        <FormControl value={course.name} className="mb-2"  
-          onChange={(e) => setCourse({ ...course, name: e.target.value }) } />
-        <FormControl value={course.description} as="textarea" rows={3}
-          onChange={(e) => setCourse({ ...course, description: e.target.value }) } />
+              Update </button>
+          </h5><br />
+          <FormControl value={course.name} className="mb-2"  
+            onChange={(e) => setCourse({ ...course, name: e.target.value }) } />
+          <FormControl value={course.description} as="textarea" rows={3}
+            onChange={(e) => setCourse({ ...course, description: e.target.value }) } /> <br />
+          </span>
+        ): true }
+        <button className="btn btn-primary float-end me-2"
+              onClick={() => setShowEnrolled(!showEnrolled)} id="wd-enrollments-course-click">
+          Enrollments </button> <br /> <br />
         <hr />
         <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
         <div id="wd-dashboard-courses">
@@ -61,10 +67,14 @@ export default function Dashboard() {
                         <CardTitle className="wd-dashboard-course-title text-nowrap overflow-hidden">{course.name}</CardTitle>
                         <CardText className="wd-dashboard-course-description overflow-hidden" style={{height:"100px"}}> {course.description} </CardText>
                         <Button variant="primary">Go</Button>
-                        <Button onClick={(event) => { event.preventDefault(); dispatch(deleteCourse(course._id)); }} 
-                          className="btn btn-danger float-end" id="wd-delete-course-click"> Delete </Button>
-                        <Button id="wd-edit-course-click" onClick={(event) => { event.preventDefault(); setCourse(course); }} 
-                          className="btn btn-warning me-2 float-end"> Edit </Button>
+                        { adminPermission ? (
+                          <span>
+                            <Button onClick={(event) => { event.preventDefault(); dispatch(deleteCourse(course._id)); }} 
+                              className="btn btn-danger float-end" id="wd-delete-course-click"> Delete </Button>
+                            <Button id="wd-edit-course-click" onClick={(event) => { event.preventDefault(); setCourse(course); }} 
+                              className="btn btn-warning me-2 float-end"> Edit </Button>
+                          </span>
+                        ) : true }
                         {isEnrolled ? (
                           <Button
                             variant="danger"
