@@ -6,6 +6,19 @@ const USERS_API = `${HTTP_SERVER}/api/users`;
 const COURSES_API = `${HTTP_SERVER}/api/courses`;
 const MODULES_API = `${HTTP_SERVER}/api/modules`;
 const ASSIGNEMENTS_API = `${HTTP_SERVER}/api/assignments`;
+const ENROLLMENTS_API = `${HTTP_SERVER}/api/enrollments`;
+export const enrollCourse = async (courseId: any) => {
+  const { data } = await axiosWithCredentials.post(`${ENROLLMENTS_API}/${courseId}`);
+  return data;
+}
+export const unenrollCourse = async (courseId: any) => {
+  const { data } = await axiosWithCredentials.delete(`${ENROLLMENTS_API}/${courseId}`);
+  return data;
+}
+export const showAllEnrollments = async () => {
+  const { data } = await axiosWithCredentials.get(ENROLLMENTS_API);
+  return data;
+}
 export const fetchAssignmentsByCourse = async () => {
   const { data } = await axiosWithCredentials.get(ASSIGNEMENTS_API);
   return data;
