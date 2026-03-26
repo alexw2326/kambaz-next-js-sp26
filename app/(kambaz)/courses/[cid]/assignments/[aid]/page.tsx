@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../store";
 import Link from "next/link";
 
-export default function AssignmentEditor() {
+export default function Assignment() {
   const { aid } = useParams();
   const { cid } = useParams();
   const { assignments } = useSelector(
@@ -22,11 +22,12 @@ export default function AssignmentEditor() {
       <ListGroupItem className="wd-assignment p-3 ps-1">
         <div className="d-flex align-items-center">
           <div style={{ maxWidth: "65%" }}>
-            <FormControl className="w-100 mb-2" value={`${assignment.title}`} />
+            <FormControl readOnly className="w-100 mb-2" value={`${assignment.title}`} />
           </div>
         </div>
       </ListGroupItem>
-      <FormControl 
+      <FormControl
+        readOnly
         as="textarea"
         rows={8}
         className="w-100" 
@@ -36,7 +37,7 @@ export default function AssignmentEditor() {
       <Row xs={1} md={5} className="g-4">
           <FormLabel column sm={2}> Points </FormLabel>
           <Col className="wd-assignment-stats" style={{ width: "300px" }}>
-            <FormControl type="number" value={`${assignment.points}`} />
+            <FormControl readOnly type="number" value={`${assignment.points}`} />
           </Col>
       </Row>
       <Dropdown className="me-2 p-1">
@@ -94,18 +95,15 @@ export default function AssignmentEditor() {
       <FormCheck type="checkbox" defaultChecked={false} label="Student Annotations"/>
       <FormCheck type="checkbox" defaultChecked={false} label="File Uploads"/>
       <FormLabel>Assign to:</FormLabel>
-      <FormControl className="w-50 mb-2" value="Everyone" />
+      <FormControl readOnly className="w-50 mb-2" value="Everyone" />
       <FormLabel>Due</FormLabel>
-      <FormControl type="date" className="w-50 mb-2" value={`${assignment.dueDate}`} />
+      <FormControl readOnly type="date" className="w-50 mb-2" value={`${assignment.dueDate}`} />
       <FormLabel>Available from</FormLabel>
-      <FormControl type="date" className="w-50 mb-2" value={`${assignment.availableFrom}`} />
+      <FormControl readOnly type="date" className="w-50 mb-2" value={`${assignment.availableFrom}`} />
       <FormLabel>Until</FormLabel>
-      <FormControl type="date" className="w-50 mb-2" value={`${assignment.dueDate}`} />
+      <FormControl readOnly type="date" className="w-50 mb-2" value={`${assignment.dueDate}`} />
       <Link href={`/courses/${cid}/assignments/`}>
         <Button className="m-2 btn-secondary" type="button">Cancel</Button>
-      </Link>
-      <Link href={`/courses/${cid}/assignments/`}>
-        <Button className="m-2 btn-danger" type="button">Save</Button>
       </Link>
     </div>
 );}

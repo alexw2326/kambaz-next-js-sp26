@@ -22,8 +22,8 @@ export default function LessonControlButtons(
     <div className="float-end">
       {adminPermission && (
         <span>
-          <FaPencil onClick={() => editAssignments(assignmentId)} className="text-primary me-3" />
-          <FaTrash className="text-danger me-2 mb-1" onClick={handleShow}/>
+          <FaPencil onClick={(e) => { e.stopPropagation(); editAssignments(assignmentId)}} className="text-primary me-3" />
+          <FaTrash className="text-danger me-2 mb-1" onClick={(e) => {e.stopPropagation(); handleShow();}}/>
         </span>
       )}
       <GreenCheckmark />

@@ -8,11 +8,12 @@ import AssignmentHeaderButton from "./AssignmentHeaderButton";
 import { MdAssignment } from "react-icons/md"
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
-import { addAssignment, updateAssignments, deleteAssignments } from "./reducer";
+import { updateAssignments, setAssignments, addAssignment } from "./reducer";
 import AssignmentEditor from "./AssignmentEditor";
+import * as client from "../../client";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -25,25 +26,46 @@ export default function Assignments() {
   const [showEditor, setShowEditor] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<any>(null);
   const dispatch = useDispatch();
+  const fetchAssignments = async () => {
+    if (!cid) return;
+    const data = await client.fetchAssignmentsByCourse();
+    dispatch(setAssignments(data));
+  };
+  const onRemoveAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
+  };
+  const onCreateAssignment = async () => {
+    if (!cid) return;
+    const newAssignment = {
+      title: assignmentName,
+      course: cid,
+      description,
+      points,
+      dueDate: assignmentDue,
+      availableFrom: assignmentAvailability,
+    };
+    const assignment = await client.createAssignment(newAssignment);
+    dispatch(addAssignment(assignment));
+    setAssignmentName("");
+    setDescription("");
+    setPoints("");
+    setAssignmentDue("");
+    setAssignmentAvailiability("");
+  };
+  const onUpdateAssignment = async (assignment: any) => {
+    await client.updateAssignment(assignment);
+    dispatch(updateAssignments(assignment));
+  };
+  useEffect(() => {
+      fetchAssignments();
+  }, [cid]);
   return (
     <div id="wd-assignments">
       <AssignmentControls setAssignmentName={setAssignmentName}
               setDescription={setDescription} setPoints={setPoints}
               setDue={setAssignmentDue} setAvailability={setAssignmentAvailiability}
-              addAssignment={() => {
-                dispatch(addAssignment({ 
-                  title: assignmentName, 
-                  course: cid,
-                  description: description,
-                  points: points,
-                  dueDate: assignmentDue,
-                  availableFrom: assignmentAvailability, }));
-                setAssignmentName("");
-                setDescription("");
-                setPoints("");
-                setAssignmentDue("");
-                setAssignmentAvailiability("");
-              }} /> <br /><br /><br />
+              addAssignment={onCreateAssignment} /> <br /><br /><br />
       <ListGroup className="rounded-0" id="wd-modules">
         <ListGroupItem className="wd-assignment p-0 fs-5 border-gray">
           <div className="wd-title p-3 ps-2 bg-secondary">
@@ -86,17 +108,25 @@ export default function Assignments() {
                     </div>
                     <div className="ms-auto d-flex">
                       <AssignmentControlButton assignmentId={assignment._id}
-                          deleteAssignments={(assignmentId) => dispatch(deleteAssignments(assignmentId))}
+                          deleteAssignments={onRemoveAssignment}
                           editAssignments={(assignmentId) => {
-                            const assignment = assignments.find((a) => a._id === assignmentId);
-                            setEditingAssignment(assignment)
-                            setShowEditor(true)}} />
+                            const found = assignments.find((a: any) => a._id === assignmentId);
+                            if (!found) return;
+                            setEditingAssignment(found);
+                            setAssignmentName(found.title);
+                            setDescription(found.description);
+                            setPoints(String(found.points));
+                            setAssignmentDue(found.dueDate);
+                            setAssignmentAvailiability(found.availableFrom);
+                            setShowEditor(true);
+                        }} />
                     </div>
                   </div>
                 </ListGroupItem>
               ))
             }
-            <AssignmentEditor
+          </ListGroup>
+          <AssignmentEditor
               show={showEditor}
               handleClose={() => setShowEditor(false)}
               dialogTitle="Edit Assignment"
@@ -105,19 +135,20 @@ export default function Assignments() {
               setPoints={setPoints}
               setDue={setAssignmentDue}
               setAvailability={setAssignmentAvailiability}
-              saveAssignment={() =>
-                dispatch(updateAssignments({
+              saveAssignment={async () => {
+                const updated = {
                   ...editingAssignment,
                   title: assignmentName,
                   description,
                   points,
                   dueDate: assignmentDue,
                   availableFrom: assignmentAvailability
-                }))
-              }
+                };
+                await onUpdateAssignment(updated);
+                setShowEditor(false);
+              }}
               assignment={editingAssignment}
             />
-          </ListGroup>
         </ListGroupItem>
       </ListGroup>
     </div>

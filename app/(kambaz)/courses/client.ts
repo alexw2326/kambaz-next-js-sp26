@@ -5,6 +5,23 @@ const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 const USERS_API = `${HTTP_SERVER}/api/users`;
 const COURSES_API = `${HTTP_SERVER}/api/courses`;
 const MODULES_API = `${HTTP_SERVER}/api/modules`;
+const ASSIGNEMENTS_API = `${HTTP_SERVER}/api/assignments`;
+export const fetchAssignmentsByCourse = async () => {
+  const { data } = await axiosWithCredentials.get(ASSIGNEMENTS_API);
+  return data;
+};
+export const createAssignment = async (assignment: any) => {
+  const { data } = await axiosWithCredentials.post(`${ASSIGNEMENTS_API}`, assignment);
+  return data;
+};
+export const updateAssignment = async (assignment: any) => {
+  const { data } = await axiosWithCredentials.put(`${ASSIGNEMENTS_API}/${assignment._id}`, assignment);
+  return data;
+};
+export const deleteAssignment = async (assignmentId: string) => {
+ const response = await axiosWithCredentials.delete(`${ASSIGNEMENTS_API}/${assignmentId}`);
+ return response.data;
+};
 export const updateModule = async (module: any) => {
   const { data } = await axios.put(`${MODULES_API}/${module._id}`, module);
   return data;
