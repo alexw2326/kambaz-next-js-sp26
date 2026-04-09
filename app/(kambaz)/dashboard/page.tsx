@@ -19,23 +19,15 @@ export default function Dashboard() {
     image: "/images/reactjs.jpg", description: "New Description"
   });
   const enrollInCourse = async (courseId: any) => {
-    await client.enrollCourse(courseId);
-    dispatch(enroll({ user: currentUser?._id, course: courseId }));
-  }
+    if (currentUser?._id) {
+      await client.enrollIntoCourse(currentUser._id, courseId);
+      dispatch(enroll({ user: currentUser._id, course: courseId }));
+    }
+  };
   const unenrollInCourse = async (courseId: any) => {
-    await client.unenrollCourse(courseId);
-    dispatch(unenroll({ user: currentUser?._id, course: courseId }));
-  }
-  const showAllEnrolled = async () => {
-    const enrollments = await client.showAllEnrollments();
-    dispatch(showEnroll(enrollments));
-  }
-  const fetchCourses = async () => {
-    try {
-      const courses = await client.findMyCourses();
-      dispatch(setCourses(courses));
-    } catch (error) {
-      console.error(error);
+    if (currentUser?._id) {
+      await client.unenrollFromCourse(currentUser._id, courseId);
+      dispatch(unenroll({ user: currentUser._id, course: courseId }));
     }
   };
   const onAddNewCourse = async () => {
@@ -55,7 +47,10 @@ export default function Dashboard() {
     const initialize = async () => {
       const allCourses = await client.fetchAllCourses();
       dispatch(setCourses(allCourses));
-      await showAllEnrolled();
+      const enrollments = await client.showAllEnrollments();
+      dispatch(showEnroll(enrollments));
+      const allEnrollments = await client.showAllEnrollments();
+      console.log("enrollments from API:", allEnrollments);
     };
     initialize();
   }, [currentUser]);
@@ -69,20 +64,20 @@ export default function Dashboard() {
         <span>
           <h5>New Course
             <button className="btn btn-primary float-end"
-                id="wd-add-new-course-click"
-                onClick={onAddNewCourse} > Add </button>
+                    id="wd-add-new-course-click"
+                    onClick={onAddNewCourse} > Add </button>
             <button className="btn btn-warning float-end me-2"
-                onClick={onUpdateCourse} id="wd-update-course-click">
+                    onClick={onUpdateCourse} id="wd-update-course-click">
               Update </button>
           </h5><br />
           <FormControl value={course.name} className="mb-2"  
-            onChange={(e) => setCourse({ ...course, name: e.target.value }) } />
+                        onChange={(e) => setCourse({ ...course, name: e.target.value }) } />
           <FormControl value={course.description} as="textarea" rows={3}
-            onChange={(e) => setCourse({ ...course, description: e.target.value }) } /> <br />
+                        onChange={(e) => setCourse({ ...course, description: e.target.value }) } /> <br />
           </span>
         ): true }
         <button className="btn btn-primary float-end me-2"
-              onClick={() => setShowEnrolled(!showEnrolled)} id="wd-enrollments-course-click">
+                onClick={() => setShowEnrolled(!showEnrolled)} id="wd-enrollments-course-click">
           Enrollments </button> <br /> <br />
         <hr />
         <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />

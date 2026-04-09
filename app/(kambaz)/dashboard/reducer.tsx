@@ -18,7 +18,11 @@ const enrollmentSlice = createSlice({
       );
     },
     showEnroll: (state, { payload }) => {
-      state.enrollments = Array.isArray(payload) ? payload : payload.enrollments ?? [];
+      const courses = Array.isArray(payload) ? payload : payload.enrollments ?? [];
+      state.enrollments = courses.map((course: any) => ({
+        user: course.user ?? course._id,
+        course: course._id,
+      }));
     }
   },
 });
