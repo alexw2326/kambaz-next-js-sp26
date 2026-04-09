@@ -49,8 +49,6 @@ export default function Dashboard() {
       dispatch(setCourses(allCourses));
       const enrollments = await client.showAllEnrollments();
       dispatch(showEnroll(enrollments));
-      const allEnrollments = await client.showAllEnrollments();
-      console.log("enrollments from API:", allEnrollments);
     };
     initialize();
   }, [currentUser]);
