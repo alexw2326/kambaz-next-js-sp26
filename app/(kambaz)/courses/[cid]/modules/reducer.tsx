@@ -2,7 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 const initialState = {
-  modules: [],
+  modules: [] as any,
 };
 const modulesSlice = createSlice({
   name: "modules",
@@ -26,12 +26,12 @@ const modulesSlice = createSlice({
     },
     updateModule: (state, { payload: module }) => {
       state.modules = state.modules.map((m: any) =>
-        m._id === module._id ? module : m
+        m._id === module._id ? { ...module, editing: false } : m
       ) as any;
     },
     editModule: (state, { payload: moduleId }) => {
       state.modules = state.modules.map((m: any) =>
-        m._id === moduleId ? { ...m, editing: true } : m
+        m._id === moduleId ? { ...m, editing: !m.editing } : m
       ) as any;
     },
   },

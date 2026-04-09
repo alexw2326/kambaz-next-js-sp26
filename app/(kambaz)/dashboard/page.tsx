@@ -35,11 +35,12 @@ export default function Dashboard() {
     dispatch(setCourses([ ...courses, newCourse ]));
   };
   const onDeleteCourse = async (courseId: string) => {
-    dispatch(setCourses(courses.filter((course) => course._id !== courseId)));
+    await client.deleteCourse(courseId);
+    dispatch(setCourses(courses.filter((course: any) => course._id !== courseId)));
   };
   const onUpdateCourse = async () => {
     await client.updateCourse(course);
-    dispatch(setCourses(courses.map((c) => {
+    dispatch(setCourses(courses.map((c: any) => {
         if (c._id === course._id) { return course; }
         else { return c; }
     })));};
@@ -73,7 +74,7 @@ export default function Dashboard() {
           <FormControl value={course.description} as="textarea" rows={3}
                         onChange={(e) => setCourse({ ...course, description: e.target.value }) } /> <br />
           </span>
-        ): true }
+        ): null }
         <button className="btn btn-primary float-end me-2"
                 onClick={() => setShowEnrolled(!showEnrolled)} id="wd-enrollments-course-click">
           Enrollments </button> <br /> <br />
@@ -82,13 +83,13 @@ export default function Dashboard() {
         <div id="wd-dashboard-courses">
           <Row xs={1} md={5} className="g-4">
             {courses
-              .filter((course) =>
+              .filter((course: any) =>
                 !showEnrolled ||
                 enrollments.some(
                   (e: any) => e.user === currentUser?._id && e.course === course._id
                 )
               )
-              .map((course) => {
+              .map((course: any) => {
                 const isEnrolled = enrollments.some(
                   (e: any) => e.user === currentUser?._id && e.course === course._id
                 );
@@ -111,24 +112,15 @@ export default function Dashboard() {
                           </span>
                         ) : true }
                         {isEnrolled ? (
-                          <Button
-                            variant="danger"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              unenrollInCourse(course._id);
-                            }}>
-                            Unenroll
-                          </Button>
-                        ) : (
-                          <Button
-                            variant="success"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              enrollInCourse(course._id);
-                            }}>
-                            Enroll
-                          </Button>
-                        )}
+                            <Button variant="danger" onClick={(e) => { e.preventDefault(); unenrollInCourse(course._id); }}>
+                              Unenroll
+                            </Button>
+                          ) : (
+                            <Button variant="success" onClick={(e) => { e.preventDefault(); enrollInCourse(course._id); }}>
+                              Enroll
+                            </Button>
+                          )
+                        }
                       </CardBody>
                     </Link>
                   </Card>

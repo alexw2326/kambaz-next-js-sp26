@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
 import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
-import { setModules, editModule, updateModule } from "./reducer";
+import { setModules, editModule } from "./reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
 import ModulesControls from "./ModulesControls";
@@ -16,6 +16,8 @@ import * as client from "../../client";
 export default function Modules() {
   const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
+  const [editingName, setEditingName] = useState("");
+  const [saving, setSaving] = useState(false);
   const { modules } = useSelector((state: RootState) => state.modulesReducer);
   const dispatch = useDispatch();
   const fetchModules = async () => {
@@ -29,13 +31,16 @@ export default function Modules() {
   const onCreateModuleForCourse = async () => {
     if (!cid) return;
     const newModule = { name: moduleName, course: cid };
-    const module = await client.createModuleForCourse(cid[0], newModule);
+    const module = await client.createModuleForCourse(cid as string, newModule);
     dispatch(setModules([...modules, module]));
   };
   const onUpdateModule = async (module: any) => {
+    if (saving) return;
+    setSaving(true);
     await client.updateModule(cid as string, module);
     const newModules = modules.map((m: any) => m._id === module._id ? module : m );
     dispatch(setModules(newModules));
+    setSaving(false);
   };
   useEffect(() => {
     fetchModules();
@@ -53,19 +58,23 @@ export default function Modules() {
                 {!module.editing && module.name}
                 {module.editing && (
                   <FormControl className="w-50 d-inline-block"
+                    value={editingName}
                     onChange={(e) =>
-                      dispatch(updateModule({ ...module, name: e.target.value }))
+                      setEditingName(e.target.value)
                     }
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        onUpdateModule({ ...module, editing: false });
+                        onUpdateModule({ ...module, name: editingName, editing: false });
                       }
-                    }}
-                    defaultValue={module.name} />
+                    }} />
                 )}
                 <ModuleControlButtons moduleId={module._id}
                   deleteModule={(moduleId) => onRemoveModule(moduleId)}
-                  editModule={(moduleId) => dispatch(editModule(moduleId))} />
+                  editModule={(moduleId) => {
+                    const module = modules.find((m: any) => m._id === moduleId);
+                    setEditingName(module.name);
+                    dispatch(editModule(moduleId));
+                  }} />
               </div>
               {module.lessons && (
                 <ListGroup className="wd-lessons rounded-0">
