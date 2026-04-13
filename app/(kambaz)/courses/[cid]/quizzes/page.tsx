@@ -56,7 +56,9 @@ export default function Quizzes() {
         <QuizEditor handleClose={() => setShow(false)} createQuiz={onCreateQuiz} />
       ) : (
         <div>
-          <QuizzesControls fetchQuizzes={fetchQuizzes} onCreateQuiz={onCreateQuiz} setQuizzes={setQuizzes} handleShow={() => setShow(true)} /> <br /> <br /> <br />
+          <QuizzesControls fetchQuizzes={fetchQuizzes} onCreateQuiz={onCreateQuiz} 
+            setQuizzes={(quizzes: any) => dispatch(setQuizzes(quizzes))} handleShow={() => setShow(true)} />
+          <br /> <br /> <br />
           <ListGroup id="wd-quizzes" className="rounded-0">
             <div className="wd-title p-3 ps-2 bg-secondary w-auto">
               <BsGripVertical className="me-2 fs-3 w-auto" />QUIZZES

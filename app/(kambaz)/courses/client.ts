@@ -8,8 +8,8 @@ const ASSIGNEMENTS_API = `${HTTP_SERVER}/api/assignments`;
 const ENROLLMENTS_API = `${HTTP_SERVER}/api/enrollments`;
 const QUIZ_API = `quizzes`;
 export const findQuizByName = async (name: string, courseId: string) => {
-  const response = await axios.get(`${COURSES_API}/${courseId}/${QUIZ_API}?name=${name}`);
-  return response.data;
+  const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/${QUIZ_API}?name=${name}`);
+  return data;
 };
 export const showAllQuizzes = async (courseId: string) => {
   const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/${QUIZ_API}`);

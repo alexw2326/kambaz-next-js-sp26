@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import * as client from "../../client";
@@ -8,8 +9,7 @@ import { RootState } from "../../../store";
 import { useSelector } from "react-redux";
 import { IoEllipsisVertical } from "react-icons/io5";
 import { useParams } from "next/navigation";
-import QuizEditor from "./[qid]/editor/page";
-export default function QuizzesControls({ fetchQuizzes, onCreateQuiz, setQuizzes, handleShow, }: {
+export default function QuizzesControls({ fetchQuizzes, setQuizzes, handleShow, }: {
     fetchQuizzes: () => void;
     onCreateQuiz: (quiz: any) => void;
     setQuizzes: (quizzes: any) => void;
@@ -23,7 +23,7 @@ export default function QuizzesControls({ fetchQuizzes, onCreateQuiz, setQuizzes
     const filterQuizzesByName = async (new_name: string) => {
         setName(new_name);
         if (new_name) {
-          const quizzes = await client.findQuizByName(name, cid as string);
+          const quizzes = await client.findQuizByName(new_name, cid as string);
           setQuizzes(quizzes);
         } else {
           fetchQuizzes();
