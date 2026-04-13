@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import AssignmentControls from "./AssignmentControls";
@@ -59,7 +60,7 @@ export default function Assignments() {
   };
   useEffect(() => {
       fetchAssignments();
-  }, [cid]);
+  }, [cid, fetchAssignments]);
   return (
     <div id="wd-assignments">
       <AssignmentControls setAssignmentName={setAssignmentName}
