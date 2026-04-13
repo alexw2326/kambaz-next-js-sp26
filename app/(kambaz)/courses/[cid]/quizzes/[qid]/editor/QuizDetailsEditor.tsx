@@ -1,10 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import { useParams, useRouter } from "next/navigation";
+import * as client from "../../../../client";
 export default function QuizDetailsEditor({ handleClose, createQuiz}:
-    { handleClose: () => void; createQuiz: (quiz: any) => void; }
+    { handleClose?: () => void; createQuiz?: (quiz: any) => void; }
 ) {
+    const { cid, qid } = useParams();
+    const router = useRouter();
+    const isEditing = qid && qid !== "new";
     const [quiz, setQuiz] = useState({
         title: "Quiz 1",
         description: "",
@@ -26,6 +32,39 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
         untilDate: "",
         isPublished: false,
     });
+    const close = () => {
+        if (handleClose) {
+            handleClose();
+        } else {
+            router.push(`/courses/${cid}/quizzes`);
+        }
+    };
+    const handleSave = async () => {
+        if (isEditing) {
+            await client.updateQuiz(quiz, cid as string);
+        } else {
+            createQuiz?.(quiz);
+        }
+        close();
+    };
+    const handleSaveAndPublish = async () => {
+        const publishedQuiz = { ...quiz, isPublished: true };
+        if (isEditing) {
+            await client.updateQuiz(publishedQuiz, cid as string);
+        } else {
+            createQuiz?.(publishedQuiz);
+        }
+        close();
+    };
+    useEffect(() => {
+        if (isEditing) {
+            const fetchQuiz = async () => {
+                const existingQuiz = await client.getQuiz(qid as string, cid as string);
+                setQuiz(existingQuiz);
+            };
+            fetchQuiz();
+        }
+    }, [qid]);
     return (
         <div>
             <label>Title</label>
@@ -69,8 +108,8 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
             <input type="date" value={quiz.untilDate} onChange={(e) => setQuiz({ ...quiz, untilDate: e.target.value })} /> <br /> <br />
             <label>Published</label>
             <input type="checkbox" checked={quiz.isPublished} onChange={(e) => setQuiz({ ...quiz, isPublished: e.target.checked })} /> <br /> <br />
-            <Button className="m-2" onClick={() => { createQuiz(quiz); handleClose(); }}>Save</Button>
-            <Button className="m-2" onClick={() => { createQuiz(quiz); handleClose(); }}>Save and Publish</Button>
+            <Button className="m-2" onClick={handleSave}>Save</Button>
+            <Button className="m-2" onClick={handleSaveAndPublish}>Save and Publish</Button>
             <Button className="m-2" variant="secondary" onClick={handleClose}>Cancel</Button>
         </div>
     );
