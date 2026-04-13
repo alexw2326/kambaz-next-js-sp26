@@ -7,6 +7,10 @@ const COURSES_API = `${HTTP_SERVER}/api/courses`;
 const ASSIGNEMENTS_API = `${HTTP_SERVER}/api/assignments`;
 const ENROLLMENTS_API = `${HTTP_SERVER}/api/enrollments`;
 const QUIZ_API = `quizzes`;
+export const setQuizPublished = async (quizId: string, courseId: string, isPublished: boolean) => {
+  const { data } = await axiosWithCredentials.put(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}`, { isPublished });
+  return data;
+}
 export const findQuizByName = async (name: string, courseId: string) => {
   const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/${QUIZ_API}?name=${name}`);
   return data;

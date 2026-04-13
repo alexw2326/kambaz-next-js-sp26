@@ -7,10 +7,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/(kambaz)/store";
 import RedCheck from "./RedCheck";
 export default function QuizControlButton(
-  { quizId, deleteQuizzes, isPublished }: {
+  { quizId, deleteQuizzes, isPublished, onTogglePublish }: {
     quizId: string; 
     deleteQuizzes: (quizId: string) => void;
     isPublished: boolean;
+    onTogglePublish: (quizId: string, published: boolean) => void;
   }
 ) {
     const [context, setContext] = useState(false);
@@ -27,7 +28,8 @@ export default function QuizControlButton(
                 <IoEllipsisVertical className="fs-4" onClick={() => { handleContext(); setShow(true); }} />
             )}
             {show && (
-                <QuizContextMenu show={context} handleClose={handleCloseContext} quizId={quizId} quizDelete={deleteQuizzes} isPublished={isPublished} />
+                <QuizContextMenu show={context} handleClose={handleCloseContext} quizId={quizId} quizDelete={deleteQuizzes} 
+                    isPublished={isPublished} onTogglePublish={onTogglePublish} />
             )}
         </div> 
     );

@@ -2,8 +2,8 @@
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Button, Modal } from "react-bootstrap";
-export default function QuizContextMenu({ show, handleClose, quizId, quizDelete, isPublished }: 
-    { show: boolean; handleClose: () => void; quizId: string; quizDelete: (quizId: string) => void; isPublished: boolean; }) {
+export default function QuizContextMenu({ show, handleClose, quizId, quizDelete, isPublished, onTogglePublish }: 
+    { show: boolean; handleClose: () => void; quizId: string; quizDelete: (quizId: string) => void; isPublished: boolean; onTogglePublish: (quizId: string, published: boolean) => void; }) {
     const { cid } = useParams();
     const router = useRouter();
     const handleEdit = () => {
@@ -22,11 +22,11 @@ export default function QuizContextMenu({ show, handleClose, quizId, quizDelete,
                     Delete
                 </Button>
                 {isPublished ? (
-                    <Button variant="warning" className="me-2 mb-1" onClick={(e) => {e.stopPropagation();}}>
+                    <Button variant="warning" className="me-2 mb-1" onClick={() => { onTogglePublish(quizId, false); handleClose();}}>
                         Unpublish
                     </Button>
                 ) : (
-                    <Button variant="success" className="me-2 mb-1" onClick={(e) => {e.stopPropagation();}}>
+                    <Button variant="success" className="me-2 mb-1" onClick={() => { onTogglePublish(quizId, true ); handleClose();}}>
                         Publish
                     </Button>
                 )}

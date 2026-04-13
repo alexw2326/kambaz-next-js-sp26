@@ -47,6 +47,12 @@ export default function Quizzes() {
     }
     return "Available";
   };
+  const onTogglePublish = async (quizId: string, published: boolean) => {
+    await client.setQuizPublished(quizId, cid as string, published);
+    dispatch(setQuizzes(quizzes.map((q: any) => 
+      q._id === quizId ? { ...q, isPublished: published } : q
+    )));
+  };
   useEffect(() => {
     fetchQuizzes();
   }, []);
@@ -83,7 +89,8 @@ export default function Quizzes() {
                   <div className="absolute top-0 right-0">
                     <QuizControlButton quizId={quiz._id}
                       deleteQuizzes={onRemoveQuizzes}
-                      isPublished={quiz.isPublished} />
+                      isPublished={quiz.isPublished}
+                      onTogglePublish={onTogglePublish} />
                   </div>
                 </div>
               </ListGroupItem>
