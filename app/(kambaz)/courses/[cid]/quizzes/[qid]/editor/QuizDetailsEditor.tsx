@@ -24,6 +24,7 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
         dueDate: "",
         availableDate: "",
         untilDate: "",
+        isPublished: false,
     });
     return (
         <div>
@@ -66,6 +67,8 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
             <input type="date" value={quiz.availableDate} onChange={(e) => setQuiz({ ...quiz, availableDate: e.target.value })} /> <br /> <br />
             <label>Until</label>
             <input type="date" value={quiz.untilDate} onChange={(e) => setQuiz({ ...quiz, untilDate: e.target.value })} /> <br /> <br />
+            <label>Published</label>
+            <input type="checkbox" checked={quiz.isPublished} onChange={(e) => setQuiz({ ...quiz, isPublished: e.target.checked })} /> <br /> <br />
             <Button className="m-2" onClick={() => { createQuiz(quiz); handleClose(); }}>Save</Button>
             <Button className="m-2" onClick={() => { createQuiz(quiz); handleClose(); }}>Save and Publish</Button>
             <Button className="m-2" variant="secondary" onClick={handleClose}>Cancel</Button>

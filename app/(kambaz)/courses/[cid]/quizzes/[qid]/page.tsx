@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Button } from "react-bootstrap";
 import { FaPencil } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-export default function QuizDetials() {
+export default function QuizDetails() {
     const { cid, qid } = useParams();
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
     const currentUserRole = currentUser?.role;

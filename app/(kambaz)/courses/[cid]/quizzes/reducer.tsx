@@ -20,9 +20,7 @@ const quizzesSlice = createSlice({
             state.quizzes = [...state.quizzes, newQuiz] as any;
         },
         deleteQuiz: (state, { payload: quizId }) => {
-            state.quizzes = state.quizzes.map((q: any) =>
-                q._id === quizId ? { ...q, editing: !q.editing} : q
-            ) as any;
+            state.quizzes = state.quizzes.filter((q: any) => q._id !== quizId);
         },
         editQuiz: (state, { payload: quizId }) => {
             state.quizzes = state.quizzes.map((q: any) =>

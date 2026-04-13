@@ -23,14 +23,16 @@ export default function Quizzes() {
   const currentUserRole = currentUser?.role;
   const fetchQuizzes = async () => {
     const quizzes = await client.showAllQuizzes(cid as string);
+    console.log("fetched quizzes:", quizzes);
     dispatch(setQuizzes(quizzes));
   };
   const onCreateQuiz = async (quiz: any) => {
     const newQuiz = await client.createQuiz(quiz, cid as string);
+    console.log("newQuiz returned:", newQuiz);
     dispatch(setQuizzes([...quizzes, newQuiz]));
   };
   const onRemoveQuizzes = async (quizId: string) => {
-    await client.deleteQuiz(cid as string, quizId);
+    await client.deleteQuiz(quizId, cid as string);
     dispatch(setQuizzes(quizzes.filter((q: any) => q._id !== quizId)));
   };
   const checkAvailability = (quiz: any) => {
@@ -78,7 +80,8 @@ export default function Quizzes() {
                   </div>
                   <div className="absolute top-0 right-0">
                     <QuizControlButton quizId={quiz._id}
-                      deleteQuizzes={onRemoveQuizzes}/>
+                      deleteQuizzes={onRemoveQuizzes}
+                      isPublished={quiz.isPublished} />
                   </div>
                 </div>
               </ListGroupItem>
