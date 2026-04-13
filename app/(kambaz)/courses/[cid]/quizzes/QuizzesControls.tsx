@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { IoEllipsisVertical } from "react-icons/io5";
 import QuizContextMenu from "./QuizContextMenu";
 import { useParams } from "next/navigation";
-import QuizEditor from "./QuizEditor";
+import QuizEditor from "./[qid]/editor/page";
 export default function QuizzesControls({ fetchQuizzes, onCreateQuiz, setQuizzes, handleShow, }: {
     fetchQuizzes: () => void;
     onCreateQuiz: (quiz: any) => void;

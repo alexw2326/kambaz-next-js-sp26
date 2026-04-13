@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { RootState } from "@/app/(kambaz)/store";
+import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
 import { Button } from "react-bootstrap";
 import { FaPencil } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 export default function QuizDetials() {
-    const { qid } = useParams();
+    const { cid, qid } = useParams();
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
     const currentUserRole = currentUser?.role;
+    const router = useRouter();
     const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
     const { quizzes } = useSelector(
         (state: RootState) => state.quizzesReducer
@@ -18,7 +20,7 @@ export default function QuizDetials() {
     );
     if (!quiz) return <div>Quiz not found</div>;
     const handleEdit = () => {
-        
+        router.push(`/courses/${cid}/quizzes/${qid}/editor`);
     }
     return (
         <div>

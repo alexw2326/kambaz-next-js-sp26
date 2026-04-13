@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 export default function QuizDetailsEditor({ handleClose, createQuiz}:
     { handleClose: () => void; createQuiz: (quiz: any) => void; }
 ) {
-    const { cid, qid } = useParams();
     const [quiz, setQuiz] = useState({
         title: "Quiz 1",
         description: "",

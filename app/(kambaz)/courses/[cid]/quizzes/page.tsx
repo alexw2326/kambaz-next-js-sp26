@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import * as client from "../../client";
 import QuizzesControls from "./QuizzesControls";
-import { FormControl, ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup, ListGroupItem } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import { setQuizzes } from "./reducer";
@@ -10,13 +11,13 @@ import { BsGripVertical } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import QuizEditor from "./QuizEditor";
+import QuizEditor from "./[qid]/editor/page";
+import { FaRocket } from "react-icons/fa6";
+import QuizControlButton from "./QuizControlButton";
 export default function Quizzes() {
   const { cid } = useParams();
   const { quizzes } = useSelector((state: RootState) => state.quizzesReducer);
   const [show, setShow] = useState(false);
-  const [editingName, setEditingName] = useState("");
-  const [saving, setSaving] = useState(false);
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const currentUserRole = currentUser?.role;
@@ -31,14 +32,6 @@ export default function Quizzes() {
   const onRemoveQuizzes = async (quizId: string) => {
     await client.deleteQuiz(cid as string, quizId);
     dispatch(setQuizzes(quizzes.filter((q: any) => q._id !== quizId)));
-  };
-  const onUpdateQuiz = async (quiz: any) => {
-    if (saving) return;
-    setSaving(true);
-    await client.updateQuiz(cid as string, quiz);
-    const newQuizzes = quizzes.map((q: any) => q._id === quiz._id ? quiz : q );
-    dispatch(setQuizzes(newQuizzes));
-    setSaving(false);
   };
   const checkAvailability = (quiz: any) => {
     const now = new Date();
@@ -63,34 +56,30 @@ export default function Quizzes() {
         <div>
           <QuizzesControls fetchQuizzes={fetchQuizzes} onCreateQuiz={onCreateQuiz} setQuizzes={setQuizzes} handleShow={() => setShow(true)} /> <br /> <br /> <br />
           <ListGroup id="wd-quizzes" className="rounded-0">
+            <div className="wd-title p-3 ps-2 bg-secondary w-auto">
+              <BsGripVertical className="me-2 fs-3 w-auto" />QUIZZES
+            </div>
             {quizzes.map((quiz: any) => (
               <ListGroupItem key={quiz._id}>
-                <div className="wd-title p-3 ps-2 bg-secondary">
-                  <BsGripVertical className="me-2 fs-3" />
-                  {!quiz.editing && quiz.name}
-                  {quiz.editing ? (
-                    <FormControl className="w-50 d-inline-block"
-                      value={editingName}
-                      onChange={(e) => {
-                        setEditingName(e.target.value);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          onUpdateQuiz({ ...quiz, name: editingName, editing: false });
-                        }
-                      }} />
-                  ) : (
+                <div className="relative">
+                  <br />
+                  <div>
+                    <FaRocket className="me-2" />
                     <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
-                          className="wd-assignment-link text-decoration-none text-dark">
-                      {quiz.title} <br />
-                      <span className="small text-muted">
-                        <strong> {checkAvailability(quiz)} | Due </strong> {quiz.dueDate} at 12:00 am |
-                        {quiz.points} pts
-                        {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
-                        {currentUserRole === "STUDENT" && quiz.score !== undefined ? ` | Score: ${quiz.score}` : ""}
-                        </span>
+                          className="text-decoration-none text-dark fw-bold">
+                      {quiz.title}
                     </Link>
-                  )}
+                  </div>
+                  <div className="small text-muted">
+                    <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {quiz.dueDate} at 12:00 am |
+                    {quiz.points} pts
+                    {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
+                    {currentUserRole === "STUDENT" && quiz.score !== undefined ? ` | Score: ${quiz.score}` : ""}
+                  </div>
+                  <div className="absolute top-0 right-0">
+                    <QuizControlButton quizId={quiz._id}
+                      deleteQuizzes={onRemoveQuizzes}/>
+                  </div>
                 </div>
               </ListGroupItem>
             ))}
