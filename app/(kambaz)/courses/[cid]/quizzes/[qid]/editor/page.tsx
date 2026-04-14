@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { Tab, Tabs } from "react-bootstrap";
 import QuizDetailsEditor from "./QuizDetailsEditor";
 import QuizQuestionsEditor from "../questions/QuizQuestionsEditor";
 import * as client from "../../../../client";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import RedCheck from "../../RedCheck";
 import GreenCheckmark from "../../GreenCheckmark";
@@ -14,6 +15,8 @@ export default function QuizEditor({handleClose, createQuiz}:
 ) {
     const { cid, qid } = useParams();
     const [quiz, setQuiz] = useState<any>(null);
+    const searchParams = useSearchParams();
+    const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "details");
     const getQuizId = async () => {
         return await client.getQuiz(qid as string, cid as string);
     };
@@ -22,6 +25,10 @@ export default function QuizEditor({handleClose, createQuiz}:
             getQuizId().then((data) => setQuiz(data));
         }
     }, [qid]);
+    useEffect(() => {
+        const tab = searchParams.get("tab") || "details";
+        setActiveTab(tab);
+    }, [searchParams])
     return (
         <div>
             <div className="p-2">
@@ -44,7 +51,7 @@ export default function QuizEditor({handleClose, createQuiz}:
                 <h6 className="float-end p-2">Points {quiz?.points || 0}</h6>
             </div>
             <div>
-                <Tabs defaultActiveKey="details" className="mb-3">
+                <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k || "details")} className="mb-3">
                     <Tab eventKey="details" title="Details">
                         <QuizDetailsEditor handleClose={handleClose} createQuiz={createQuiz} />
                     </Tab>
