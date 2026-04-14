@@ -42,14 +42,19 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
     };
     const handleSave = async () => {
         if (isEditing) {
-            await client.updateQuiz(quiz, cid as string);
+            const existingQuiz = await client.getQuiz(qid as string, cid as string);
+            await client.updateQuiz({ 
+                ...quiz, 
+                questions: existingQuiz.questions
+            }, cid as string);
         } else {
             createQuiz?.(quiz);
         }
         close();
     };
     const handleSaveAndPublish = async () => {
-        const publishedQuiz = { ...quiz, isPublished: true };
+        const existingQuiz = await client.getQuiz(qid as string, cid as string);
+        const publishedQuiz = { ...quiz, isPublished: true, questions: existingQuiz.questions };
         if (isEditing) {
             await client.updateQuiz(publishedQuiz, cid as string);
         } else {

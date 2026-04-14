@@ -24,6 +24,9 @@ export default function QuizQuestionsEditor() {
             correctAnswers: [],
         };
         const created = await client.createQuestion(newQuestion, cid as string, qid as string);
+        const existingQuiz = await client.getQuiz(qid as string, cid as string);
+        const newQuestions = [...(existingQuiz.questions || []), created._id];
+        await client.updateQuizQuestions(qid as string, cid as string, newQuestions);
         setQuestions([...questions, created]);
         setNewQuestionIds([...newQuestionIds, created._id]);
     }

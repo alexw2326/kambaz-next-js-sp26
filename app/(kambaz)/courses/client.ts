@@ -35,6 +35,10 @@ export const updateQuiz = async (quiz: any, courseId: string) => {
   const { data } = await axiosWithCredentials.put(`${COURSES_API}/${courseId}/${QUIZ_API}/${quiz._id}`, quiz);
   return data;
 }
+export const updateQuizQuestions = async (quizId: string, courseId: string, questions: string[]) => {
+  const { data } = await axiosWithCredentials.put(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}`, { questions });
+  return data;
+}
 export const showAllQuestions = async (courseId: string, quizId: string) => {
   const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}/questions`);
   return data;
