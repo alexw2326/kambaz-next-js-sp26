@@ -51,6 +51,9 @@ export default function Quizzes() {
       q._id === quizId ? { ...q, isPublished: published } : q
     )));
   };
+  const formatDate = (date: string) => {
+    return date ? date.split("T")[0] : "";
+  };
   useEffect(() => {
     fetchQuizzes();
   }, []);
@@ -79,7 +82,7 @@ export default function Quizzes() {
                     </Link>
                   </div>
                   <div className="small text-muted">
-                    <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {quiz.dueDate} at 12:00 am |
+                    <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
                     {quiz.points} pts
                     {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
                     {currentUserRole === "STUDENT" && quiz.score !== undefined ? ` | Score: ${quiz.score}` : ""}

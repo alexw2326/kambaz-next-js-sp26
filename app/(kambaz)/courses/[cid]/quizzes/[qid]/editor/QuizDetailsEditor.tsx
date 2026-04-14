@@ -62,11 +62,19 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
         }
         close();
     };
+    const formatDate = (date: string) => {
+        return date ? date.split("T")[0] : "";
+    };
     useEffect(() => {
         if (isEditing) {
             const fetchQuiz = async () => {
                 const existingQuiz = await client.getQuiz(qid as string, cid as string);
-                setQuiz(existingQuiz);
+                setQuiz({
+                    ...existingQuiz,
+                    dueDate: formatDate(existingQuiz.dueDate),
+                    availableDate: formatDate(existingQuiz.availableDate),
+                    untilDate: formatDate(existingQuiz.untilDate),
+                });
             };
             fetchQuiz();
         }
