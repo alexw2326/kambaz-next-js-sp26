@@ -23,12 +23,10 @@ export default function Quizzes() {
   const currentUserRole = currentUser?.role;
   const fetchQuizzes = async () => {
     const quizzes = await client.showAllQuizzes(cid as string);
-    console.log("fetched quizzes:", quizzes);
     dispatch(setQuizzes(quizzes));
   };
   const onCreateQuiz = async (quiz: any) => {
     const newQuiz = await client.createQuiz(quiz, cid as string);
-    console.log("newQuiz returned:", newQuiz);
     dispatch(setQuizzes([...quizzes, newQuiz]));
   };
   const onRemoveQuizzes = async (quizId: string) => {

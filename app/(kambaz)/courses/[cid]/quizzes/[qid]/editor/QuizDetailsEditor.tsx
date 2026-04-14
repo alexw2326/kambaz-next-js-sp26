@@ -30,6 +30,7 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
         dueDate: "",
         availableDate: "",
         untilDate: "",
+        questions: [],
         isPublished: false,
     });
     const close = () => {
