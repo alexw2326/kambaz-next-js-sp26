@@ -77,7 +77,7 @@ export default function QuizQuestionsEditor() {
             <Button size="lg" className="float-end m-2" onClick={handleCancel}>
                 Cancel
             </Button>
-            <Button variant="danger" size="lg" className="float-end m-2">
+            <Button variant="danger" size="lg" className="float-end m-2" onClick={backDetails}>
                 Save
             </Button>
         </div>

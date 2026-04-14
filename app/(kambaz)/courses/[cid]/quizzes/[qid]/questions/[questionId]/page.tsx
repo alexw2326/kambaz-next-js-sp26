@@ -8,19 +8,16 @@ import * as client from "../../../../../client";
 export default function QuestionEditor({ question, onClose, onSave }: 
         { question: any; onClose: () => void; onSave: (updated: any) => void; }) {
     const [title, setQuestionTitle] = useState(question?.title || "");
-    const [questionType, setQuestionType] = useState(question?.questionType || "multiple-choice");
+    const [questionType, setQuestionType] = useState(question?.questionType || "MULTIPLE CHOICE");
     const [points, setPoints] = useState(question?.points || 0);
     const [questionText, setQuestionText] = useState(question?.questionText || "");
     const [correctAnswer, setCorrectAnswer] = useState(question?.correctAnswer || "true");
-    const [options, setOptions] = useState<string[]>(question?.options || []);
+    const [options, setOptions] = useState<{text: string, isCorrect: boolean}[]>(question?.options || []);
     const [correctAnswers, setCorrectAnswers] = useState<string[]>(question?.correctAnswers || []);
-    const [correctAnswerIndex, setCorrectAnswerIndex] = useState<number | null>(
-        question?.correctAnswer ? question.options?.indexOf(question.correctAnswer) : null
-    );
     const addPotentialAnswer = () => {
-        if (questionType === "multiple-choice") {
-            setOptions([...options, ""]);
-        } else if (questionType === "fill-blank") {
+        if (questionType === "MULTIPLE CHOICE") {
+            setOptions([...options, {text: "", isCorrect: false}]);
+        } else if (questionType === "FILL BLANK") {
             setCorrectAnswers([...correctAnswers, ""]);
         }
     };
@@ -46,19 +43,19 @@ export default function QuestionEditor({ question, onClose, onSave }:
             <FormControl value={title} placeholder="Enter question title here" className="mb-2" onChange={(e) => setQuestionTitle(e.target.value)} />
             <Dropdown className="me-2 p-1">
                 <FormLabel column sm={2}> Question Type </FormLabel>
-                <DropdownToggle variant="secondary" id="wd-questions-types">
-                    {questionType === "multiple-choice" && "MULTIPLE CHOICE"}
-                    {questionType === "true-false" && "TRUE FALSE"}
-                    {questionType === "fill-blank" && "FILL BLANK"}
+                <DropdownToggle variant="secondary" id="wd-questions-types" value={"MULTIPLE CHOICE"}>
+                    {questionType === "MULTIPLE CHOICE" && "MULTIPLE CHOICE"}
+                    {questionType === "TRUE FALSE" && "TRUE FALSE"}
+                    {questionType === "FILL BLANK" && "FILL BLANK"}
                 </DropdownToggle>
                 <DropdownMenu>
-                    <DropdownItem id="wd-questions-multiple-choice" onClick={() => setQuestionType("multiple-choice")}>
+                    <DropdownItem id="wd-questions-multiple-choice" onClick={() => setQuestionType("MULTIPLE CHOICE")}>
                         Multiple Choice
                     </DropdownItem>
-                    <DropdownItem id="wd-questions-true-false" onClick={() => setQuestionType("true-false")}>
+                    <DropdownItem id="wd-questions-true-false" onClick={() => setQuestionType("TRUE FALSE")}>
                         True or False
                     </DropdownItem>
-                    <DropdownItem id="wd-questions-fill-blank" onClick={() => setQuestionType("fill-blank")}>
+                    <DropdownItem id="wd-questions-fill-blank" onClick={() => setQuestionType("FILL BLANK")}>
                         Fill in the Blank
                     </DropdownItem>
                 </DropdownMenu>
@@ -69,7 +66,7 @@ export default function QuestionEditor({ question, onClose, onSave }:
             <FormControl type="number" value={points} 
                 onChange={(e) => setPoints(Number(e.target.value))} className="mb-2 w-25" />
             <h3>Answers</h3>
-            {questionType === "true-false" ? (
+            {questionType === "TRUE FALSE" ? (
                 <div>
                     <FormLabel>Correct Answer</FormLabel>
                     <FormControl value={correctAnswer} as="select" className="w-50" onChange={(e) => setCorrectAnswer(e.target.value)}>
@@ -77,24 +74,28 @@ export default function QuestionEditor({ question, onClose, onSave }:
                         <option value="false">False</option>
                     </FormControl>
                 </div>
-            ) : questionType === "multiple-choice" ? (
+            ) : questionType === "MULTIPLE CHOICE" ? (
                 <div>
                     <FormLabel>Options</FormLabel>
-                    {options.map((option: string, index: number) => (
+                    {options.map((option: {text: string, isCorrect: boolean}, index: number) => (
                         <div key={index} className="d-flex align-items-center mb-2">
                             <FormLabel>Possible Answer</FormLabel>
-                            <FormControl placeholder={`Option ${index + 1}`} value={option} className="w-50"
+                            <FormControl placeholder={`Option ${index + 1}`} value={option.text} className="w-50"
                                 onChange={(e) => {
                                     const updated = [...options];
-                                    updated[index] = e.target.value;
+                                    updated[index] = { ...updated[index], text: e.target.value };
                                     setOptions(updated);
                                 }} />
-                            <input type="radio" name={`correct-${question._id}`} checked={correctAnswerIndex === index} onChange={() => setCorrectAnswerIndex(index)} className="ms-2" />
+                            <input type="radio" name={`correct-${question._id}`} checked={option.isCorrect} 
+                                onChange={() => {
+                                    const updated = options.map((o, i) => ({ ...o, isCorrect: i === index }));
+                                    setOptions(updated);
+                                }} className="ms-2" />
                             <label className="ms-1">Correct</label>
                         </div>
                     ))}
                 </div>
-            ) : questionType === "fill-blank" ? (
+            ) : questionType === "FILL BLANK" ? (
                 <div>
                     <FormLabel>Possible Answers</FormLabel>
                     {correctAnswers.map((answer: string, index: number) => (
