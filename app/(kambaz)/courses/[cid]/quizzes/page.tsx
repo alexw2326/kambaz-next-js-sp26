@@ -72,27 +72,25 @@ export default function Quizzes() {
             </div>
             {quizzes.map((quiz: any) => (
               <ListGroupItem key={quiz._id}>
-                <div className="relative">
-                  <br />
+                <div className="d-flex justify-content-between align-items-center">
                   <div>
-                    <FaRocket className="me-2" />
-                    <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
+                    <div>
+                      <FaRocket className="me-2" />
+                      <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
                           className="text-decoration-none text-dark fw-bold">
-                      {quiz.title}
-                    </Link>
+                          {quiz.title}
+                      </Link>
+                    </div>
+                    <div className="small text-muted">
+                      <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
+                      {quiz.points} pts
+                      {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
+                      {currentUserRole === "STUDENT" && quiz.score !== undefined ? ` | Score: ${quiz.score}` : ""}
+                    </div>
                   </div>
-                  <div className="small text-muted">
-                    <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
-                    {quiz.points} pts
-                    {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
-                    {currentUserRole === "STUDENT" && quiz.score !== undefined ? ` | Score: ${quiz.score}` : ""}
-                  </div>
-                  <div className="absolute top-0 right-0">
-                    <QuizControlButton quizId={quiz._id}
-                      deleteQuizzes={onRemoveQuizzes}
-                      isPublished={quiz.isPublished}
-                      onTogglePublish={onTogglePublish} />
-                  </div>
+                  <QuizControlButton quizId={quiz._id}
+                    deleteQuizzes={onRemoveQuizzes} isPublished={quiz.isPublished}
+                    onTogglePublish={onTogglePublish} />
                 </div>
               </ListGroupItem>
             ))}

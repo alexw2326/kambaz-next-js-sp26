@@ -22,7 +22,7 @@ export default function QuizControlButton(
     const currentUserRole = currentUser?.role;
     const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
     return (
-        <div className="float-end">
+        <div className="float-end d-flex align-items-center">
             {isPublished ? <GreenCheckmark /> : <RedCheck />}
             {adminPermission && (
                 <IoEllipsisVertical className="fs-4" onClick={() => { handleContext(); setShow(true); }} />

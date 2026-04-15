@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Button } from "react-bootstrap";
 import { FaPencil } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import QuizPreview from "./submissions/QuizPreview";
+import QuizPreview from "./submissions/page";
 import { useEffect, useState } from "react";
 import * as client from "../../../client";
 export default function QuizDetails() {
@@ -30,7 +30,7 @@ export default function QuizDetails() {
     const handleEdit = () => {
         router.push(`/courses/${cid}/quizzes/${qid}/editor`);
     }
-    const handlePreview = () => {
+    const handleStart = () => {
         setShow(true);
     }
     return (
@@ -44,7 +44,7 @@ export default function QuizDetails() {
                             <Button variant="secondary" size="lg" className="float-end m-2" id="wd-edit-quiz-btn" onClick={handleEdit}>
                                 <FaPencil /> Edit
                             </Button>
-                            <Button variant="secondary" size="lg" className="float-end m-2" id="wd-preview-quiz-btn" onClick={handlePreview}>
+                            <Button variant="secondary" size="lg" className="float-end m-2" id="wd-preview-quiz-btn" onClick={handleStart}>
                                 Preview
                             </Button>
                             <h1>{quiz.title}</h1>
@@ -67,7 +67,7 @@ export default function QuizDetails() {
                         </div>
                     ) : (
                         <div>
-                            <Button variant="secondary" size="lg" className="float-end" id="wd-start-quiz-btn">
+                            <Button variant="secondary" size="lg" id="wd-start-quiz-btn" onClick={handleStart}>
                                 Start Quiz
                             </Button>
                         </div>

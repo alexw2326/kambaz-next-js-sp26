@@ -104,6 +104,12 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
             <input type="number" value={quiz.timeLimit} onChange={(e) => setQuiz({ ...quiz, timeLimit: parseInt(e.target.value) })} /> <br /> <br />
             <label>Multiple attempts</label>
             <input type="checkbox" checked={quiz.multipleAttempts} onChange={(e) => setQuiz({ ...quiz, multipleAttempts: e.target.checked })} /> <br /> <br />
+            {quiz.multipleAttempts && (
+                <div>
+                    <label>Number of Attempts Allowed</label>
+                    <input type="number" value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber })} /> <br /> <br />
+                </div>
+            )}
             <label>Show correct answers</label>
             <input type="checkbox" checked={quiz.showCorrectAnswers} onChange={(e) => setQuiz({ ...quiz, showCorrectAnswers: e.target.checked })} /> <br /> <br />
             <label>Access code</label>
