@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { Button } from "react-bootstrap";
 import { FaPencil } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import QuizPreview from "./QuizPreview";
+import QuizPreview from "./submissions/QuizPreview";
 import { useEffect, useState } from "react";
 import * as client from "../../../client";
 export default function QuizDetails() {

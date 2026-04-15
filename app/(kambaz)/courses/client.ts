@@ -7,6 +7,18 @@ const COURSES_API = `${HTTP_SERVER}/api/courses`;
 const ASSIGNEMENTS_API = `${HTTP_SERVER}/api/assignments`;
 const ENROLLMENTS_API = `${HTTP_SERVER}/api/enrollments`;
 const QUIZ_API = `quizzes`;
+export const showAllSubmissionsByUser = async (courseId: string, quizId: string, userId: string) => {
+  const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}/submissions/user/${userId}`);
+  return data;
+}
+export const createSubmission = async (submission: any, courseId: string, quizId: string, userId: string) => {  
+  const { data } = await axiosWithCredentials.post(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}/submissions/user/${userId}`, submission);
+  return data;
+}
+export const deleteSubmission = async (quizId: string, courseId: string, submissionId: string, userId: string) => {
+  const { data } = await axiosWithCredentials.delete(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}/submissions/${submissionId}/user/${userId}`);
+  return data;
+}
 export const getQuiz = async (quizId: string, courseId: string) => {
   const { data } = await axiosWithCredentials.get(`${COURSES_API}/${courseId}/${QUIZ_API}/${quizId}`);
   return data;

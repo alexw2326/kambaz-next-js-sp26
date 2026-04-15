@@ -3,7 +3,7 @@
 "use client"
 import { Tab, Tabs } from "react-bootstrap";
 import QuizDetailsEditor from "./QuizDetailsEditor";
-import QuizQuestionsEditor from "../questions/QuizQuestionsEditor";
+import QuizQuestionsEditor from "../questions/page";
 import * as client from "../../../../client";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

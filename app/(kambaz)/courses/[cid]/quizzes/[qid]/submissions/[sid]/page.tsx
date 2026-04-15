@@ -1,41 +1,69 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import * as client from "../../../client";
+import * as client from "../../../../../client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/(kambaz)/store";
 import { Button, FormControl } from "react-bootstrap";
+import GreenCheckmark from "../../../GreenCheckmark";
+import RedCheck from "../../../RedCheck";
 
-export default function QuizPreview({ quiz, time }: { quiz: any; time: string }) {
-    const { cid, qid } = useParams();
+export default function QuizGraded() {
+    const { cid, qid, sid } = useParams();
+    const router = useRouter();
     const [loading, setLoading] = useState(true);
-    const [questions, setQuestions] = useState<any[]>([]);
+    const [quiz, setQuiz] = useState<any>(null);
     const [question, setQuestion] = useState<any>();
+    const [questions, setQuestions] = useState<any[]>([]);
+    const [answers, setAnswers] = useState<any[]>([]);
     const [index, setIndex] = useState(0);
     const { currentUser } = useSelector((state: RootState) => state.accountReducer);
     const currentUserRole = currentUser?.role;
     const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
-    const [submission, setSubmission] = useState<any>();
+    const [submissions, setSubmissions] = useState<any[]>([]);
+    const fetchSubmissions = async () => {
+        const submission = await client.showAllSubmissionsByUser(cid as string, qid as string, currentUser?._id as string);
+        setSubmissions(submission);
+        if (submission.length > 0) {
+            setAnswers(submission[submission.length - 1].answers);
+        }
+    };
     const handleNext = () => {
         setIndex(index+1)
     }
     const handlePrevious = () => {
         setIndex(index-1)
     }
-    const handleSubmit = () => {
-        
+    const handleEdit = () => {
+        router.push(`/courses/${cid}/quizzes/${qid}/questions`);
+    }
+    const exitQuiz = async () => {
+        if (adminPermission) {
+            await client.deleteSubmission(qid as string, cid as string, sid as string, currentUser?._id as string)
+        }
+        router.push(`/courses/${cid}/quizzes`);
     }
     useEffect(() => {
         const fetchQuestions = async () => {
-            if (!qid || qid === "new") return;
+            if (!qid || qid === "new" || !cid) return;
+            client.getQuiz(qid as string, cid as string)
+                .then(setQuiz)
+                .finally(() => setLoading(false));
             const data = await client.showAllQuestions(cid as string, qid as string);
             setQuestions(data);
             setLoading(false);
         };
         fetchQuestions();
-    }, [qid]);
+        fetchSubmissions();
+    }, [qid, cid]);
+    useEffect(() => {
+        if (submissions.length > 0) {
+            const allAnswers = submissions[submissions.length - 1].answers;
+            setAnswers(allAnswers);
+        }
+    }, [submissions]);
     useEffect(() => {
         if (questions.length > 0) {
             setQuestion(questions[index]);
@@ -48,8 +76,6 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
     return (
         <div>
             <h1>{quiz?.title}</h1>
-            <h3>Started: {time}</h3>
-            <h1>Quiz Instructions</h1>
             <div key={question._id}>
                 <div className="wd-title p-3 ps-2 bg-secondary w-75 border border-dark border-2 d-flex justify-content-between">
                     <h5 className="float-start">Question {index + 1}</h5>
@@ -59,25 +85,33 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
                     {question.questionText}
                     {question.questionType === "TRUE FALSE" && (
                         <div className="p-2">
-                            <input type="radio" id="true-option" name="true-false" />
+                            <input type="radio" id="true-option" name="true-false" readOnly
+                                checked={answers.find(a => a.questionId === question._id)?.selectedAnswer === "true"} />
                             <label htmlFor="true-option">True</label> <br />
-                            <input type="radio" id="false-option" name="true-false" />
+                            <input type="radio" id="false-option" name="true-false" readOnly
+                                checked={answers.find(a => a.questionId === question._id)?.selectedAnswer === "false"} />
                             <label htmlFor="false-option">False</label>
+                            {answers.find(a => a.questionId === question._id)?.isCorrect ? <GreenCheckmark /> : <RedCheck />}
                         </div>
                     )}
                     {question.questionType === "MULTIPLE CHOICE" && (
                         <div className="p-2">
                             {question.options.map((option: any, i: number) => (
                                 <div key={i}>
-                                    <input type="radio" id={`mcq-option-${i}`} name="mcq" />
+                                    <input type="radio" id={`mcq-option-${i}`} name="mcq" value={option.text} readOnly
+                                        checked={answers.find(a => a.questionId === question._id)?.selectedAnswer === option.text}/>
                                     <label htmlFor={`mcq-option-${i}`}>{option.text}</label> <br />
                                 </div>
                             ))}
+                            {answers.find(a => a.questionId === question._id)?.isCorrect ? <GreenCheckmark /> : <RedCheck />}
                         </div>
                     )}
                     {question.questionType === "FILL BLANK" && (
                         <div className="p-2">
-                            <FormControl as="textarea" placeholder="Enter answer here" />
+                            <FormControl as="textarea" placeholder="Enter answer here" readOnly
+                                value={answers.find(a => a.questionId === question._id)?.selectedAnswer || ""}
+                                onChange={(e) => e.target.value} />
+                            {answers.find(a => a.questionId === question._id)?.isCorrect ? <GreenCheckmark /> : <RedCheck />}
                         </div>
                     )}
                 </div>
@@ -85,13 +119,13 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
                     {!isFirst && (
                         <Button onClick={handlePrevious}>Previous</Button>
                     )}
-                    {isLast ? (
-                        <Button variant="success" onClick={handleSubmit}>
-                            Submit Quiz
-                        </Button>
-                    ) : (
+                    {!isLast && (
                         <Button onClick={handleNext}>Next</Button>
                     )}
+                    {adminPermission && (
+                        <Button onClick={handleEdit}>Edit Quiz</Button>
+                    )}
+                    <Button onClick={exitQuiz}>Exit</Button>
                 </div>
             </div>
         </div>
