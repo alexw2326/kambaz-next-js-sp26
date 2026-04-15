@@ -8,6 +8,7 @@ import * as client from "../../../../../client";
 export default function QuestionEditor({ question, onClose, onSave }: 
         { question: any; onClose: () => void; onSave: (updated: any) => void; }) {
     const [title, setQuestionTitle] = useState(question?.title || "");
+    const [correctChecked, setCorrectChecked] = useState(false);
     const [questionType, setQuestionType] = useState(question?.questionType || "MULTIPLE CHOICE");
     const [points, setPoints] = useState(question?.points || 0);
     const [questionText, setQuestionText] = useState(question?.questionText || "");
@@ -63,13 +64,13 @@ export default function QuestionEditor({ question, onClose, onSave }:
             <h3>Question</h3>
             <FormControl value={questionText} as="textarea" rows={3} placeholder="Enter question text here" onChange={(e) => setQuestionText(e.target.value)} />
             <h3>Pts</h3>
-            <FormControl type="number" value={points} 
+            <FormControl type="number" min={0} value={points} 
                 onChange={(e) => setPoints(Number(e.target.value))} className="mb-2 w-25" />
             <h3>Answers</h3>
             {questionType === "TRUE FALSE" ? (
                 <div>
                     <FormLabel>Correct Answer</FormLabel>
-                    <FormControl value={correctAnswer} as="select" className="w-50" onChange={(e) => setCorrectAnswer(e.target.value)}>
+                    <FormControl value={correctAnswer} as="select" className="w-50" onChange={(e) => { setCorrectAnswer(e.target.value); setCorrectChecked(true);}}>
                         <option value="true">True</option>
                         <option value="false">False</option>
                     </FormControl>
@@ -89,7 +90,8 @@ export default function QuestionEditor({ question, onClose, onSave }:
                             <input type="radio" name={`correct-${question._id}`} checked={option.isCorrect} 
                                 onChange={() => {
                                     const updated = options.map((o, i) => ({ ...o, isCorrect: i === index }));
-                                    setOptions(updated);
+                                    setOptions(updated)
+                                    setCorrectChecked(true);
                                 }} className="ms-2" />
                             <label className="ms-1">Correct</label>
                         </div>
@@ -107,6 +109,7 @@ export default function QuestionEditor({ question, onClose, onSave }:
                                     const updated = [...correctAnswers];
                                     updated[index] = e.target.value;
                                     setCorrectAnswers(updated);
+                                    setCorrectChecked(true)
                                 }}
                             />
                         </div>
@@ -115,7 +118,9 @@ export default function QuestionEditor({ question, onClose, onSave }:
             ) : null}
             <Button className="m-2" onClick={addPotentialAnswer}><FaPlus /> Add Another Answer</Button>
             <Button variant="secondary" className="m-2" onClick={onClose}>Cancel</Button>
-            <Button variant="danger" className="m-2" onClick={updateQuestion}>Save</Button>
+            {correctChecked && (
+                <Button variant="danger" className="m-2" onClick={updateQuestion}>Save</Button>
+            )}
         </div>
     );
 }

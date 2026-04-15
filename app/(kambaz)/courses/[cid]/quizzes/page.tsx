@@ -21,6 +21,7 @@ export default function Quizzes() {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const currentUserRole = currentUser?.role;
+  const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
   const fetchQuizzes = async () => {
     const quizzes = await client.showAllQuizzes(cid as string);
     dispatch(setQuizzes(quizzes));

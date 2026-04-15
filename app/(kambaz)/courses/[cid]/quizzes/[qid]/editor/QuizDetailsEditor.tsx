@@ -97,17 +97,17 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
                 <option value="UNGRADED SURVEY">Ungraded Survey</option>
             </select> <br /> <br />
             <label>Points</label>
-            <input type="number" value={quiz.points} onChange={(e) => setQuiz({ ...quiz, points: parseInt(e.target.value) })} /> <br /> <br />
+            <input type="number" min={0} value={quiz.points} onChange={(e) => setQuiz({ ...quiz, points: parseInt(e.target.value) })} /> <br /> <br />
             <label>Shuffle Answers</label>
             <input type="checkbox" checked={quiz.shuffleAnswers} onChange={(e) => setQuiz({ ...quiz, shuffleAnswers: e.target.checked })} /> <br /> <br />
             <label>Time limit</label>
-            <input type="number" value={quiz.timeLimit} onChange={(e) => setQuiz({ ...quiz, timeLimit: parseInt(e.target.value) })} /> <br /> <br />
+            <input type="number" min={1} value={quiz.timeLimit} onChange={(e) => setQuiz({ ...quiz, timeLimit: parseInt(e.target.value) })} /> <br /> <br />
             <label>Multiple attempts</label>
             <input type="checkbox" checked={quiz.multipleAttempts} onChange={(e) => setQuiz({ ...quiz, multipleAttempts: e.target.checked })} /> <br /> <br />
             {quiz.multipleAttempts && (
                 <div>
                     <label>Number of Attempts Allowed</label>
-                    <input type="number" value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber })} /> <br /> <br />
+                    <input type="number" min={1} value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber })} /> <br /> <br />
                 </div>
             )}
             <label>Show correct answers</label>

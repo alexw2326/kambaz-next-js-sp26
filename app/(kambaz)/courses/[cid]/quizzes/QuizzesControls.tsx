@@ -33,8 +33,7 @@ export default function QuizzesControls({ fetchQuizzes, setQuizzes, handleShow, 
         <div id="wd-quizzes-controls" className="text-nowrap">
             {adminPermission && (
                 <span>
-                    <IoEllipsisVertical className="fs-4 mt-2 float-end" />
-                    <Button variant="danger" size="lg" className="float-end" id="wd-add-quiz-btn" onClick={handleShow}>
+                    <Button variant="danger" size="lg" className="float-end m-2" id="wd-add-quiz-btn" onClick={handleShow}>
                         <FaPlus /> Quiz
                     </Button>
                 </span>
