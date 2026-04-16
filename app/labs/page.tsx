@@ -33,8 +33,11 @@ export default function labs() {
        </li>
      </ul>
      <h3>Link to my </h3>
-     <Link href="https://github.com/alexw2326/kambaz-next-js-sp26" id="wd-github">
-        GitHub
+     <Link href="https://github.com/alexw2326/kambaz-next-js-sp26" id="wd-github-frontend">
+        GitHub Frontend
+     </Link>
+     <Link href="https://github.com/alexw2326/kambaz-node-server-app.git" id="wd-github-backend">
+        GitHub Backend
      </Link>
    </div>
 );}

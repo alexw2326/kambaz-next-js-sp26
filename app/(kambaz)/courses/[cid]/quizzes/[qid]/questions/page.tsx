@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import QuestionEditor from "./[questionId]/page";
 
-export default function QuizQuestionsEditor() {
+export default function QuizQuestionsEditor({ onQuestionsChange }: { onQuestionsChange?: () => void }) {
     const { cid, qid } = useParams();
     const [questions, setQuestions] = useState<any[]>([]);
     const router = useRouter();
@@ -29,10 +29,12 @@ export default function QuizQuestionsEditor() {
         await client.updateQuizQuestions(qid as string, cid as string, newQuestions);
         setQuestions([...questions, created]);
         setNewQuestionIds([...newQuestionIds, created._id]);
+        onQuestionsChange?.();
     }
     const deleteQuestion = async (questionId: string) => {
         await client.deleteQuestion(questionId, cid as string, qid as string);
         setQuestions(questions.filter((q: any) => q._id !== questionId));
+        onQuestionsChange?.();
     };
     const backDetails = () => {
         router.push(`/courses/${cid}/quizzes/${qid}/editor?tab=details`);
@@ -56,7 +58,7 @@ export default function QuizQuestionsEditor() {
     if (editingQuestion) {
         return <QuestionEditor question={editingQuestion} onClose={() => setEditingQuestion(null)} 
             onSave={(updated: any) => { setQuestions(questions.map((q: any) => q._id === updated._id ? updated : q)); 
-            setEditingQuestion(null); }} />
+            setEditingQuestion(null); onQuestionsChange?.(); }} />
     }
     return (
         <div>

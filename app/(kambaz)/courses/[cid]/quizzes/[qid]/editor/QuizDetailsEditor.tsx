@@ -1,12 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useParams, useRouter } from "next/navigation";
 import * as client from "../../../../client";
-export default function QuizDetailsEditor({ handleClose, createQuiz}:
-    { handleClose?: () => void; createQuiz?: (quiz: any) => void; }
+export default function QuizDetailsEditor({ handleClose}:
+    { handleClose?: () => void; }
 ) {
     const { cid, qid } = useParams();
     const router = useRouter();
@@ -48,8 +47,6 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
                 ...quiz, 
                 questions: existingQuiz.questions
             }, cid as string);
-        } else {
-            createQuiz?.(quiz);
         }
         close();
     };
@@ -58,8 +55,6 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
         const publishedQuiz = { ...quiz, isPublished: true, questions: existingQuiz.questions };
         if (isEditing) {
             await client.updateQuiz(publishedQuiz, cid as string);
-        } else {
-            createQuiz?.(publishedQuiz);
         }
         close();
     };
@@ -116,7 +111,7 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
             {quiz.multipleAttempts && (
                 <div>
                     <label>Number of Attempts Allowed</label>
-                    <input type="number" min={1} value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber || 1})} /> <br /> <br />
+                    <input type="number" min={2} value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber || 2})} /> <br /> <br />
                 </div>
             )}
             <label>Show correct answers</label>

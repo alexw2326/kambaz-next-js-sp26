@@ -61,7 +61,7 @@ export default function QuizDetails() {
                             <h6><b>Time Limit </b>{quiz.timeLimit} minutes</h6>
                             <h6><b>Multiple Attempts </b>{quiz.multipleAttempts ? "Yes" : "No"}</h6>
                             <h6><b>How many attempts </b>{quiz.numAttemptsAllowed}</h6>
-                            <h6><b>View Responses </b>{quiz.showCorrectAnswers ? "Always" : "Never"}</h6>
+                            <h6><b>Show Correct Answers </b>{quiz.showCorrectAnswers ? "Always" : "Never"}</h6>
                             <h6><b>Access code </b>{quiz.accessCode ? quiz.accessCode : ""}</h6>
                             <h6><b>One Question at a Time </b>{quiz.oneQuestionAtATime ? "Yes" : "No"}</h6>
                             <h6><b>Webcam required </b>{quiz.webcamRequired ? "Yes" : "No"}</h6>

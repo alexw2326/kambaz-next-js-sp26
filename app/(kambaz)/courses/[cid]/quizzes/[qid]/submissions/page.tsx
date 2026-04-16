@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
@@ -20,7 +21,6 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
     const currentUserRole = currentUser?.role;
     const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
     const [answers, setAnswers] = useState<any[]>([]);
-    const [submissions, setSubmissions] = useState<any>();
     const [prevSubmission, setPrevSubmissions] = useState<any[]>([]);
     const [submissionsLoading, setSubmissionsLoading] = useState(true);
     const [outOfAttempts, setOutOfAttempts] = useState(false);
@@ -65,8 +65,6 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
             submittedAt: new Date(),
         };
         const created = await client.createSubmission(newSubmission, cid as string, qid as string, currentUser?._id as string);
-        console.log("created submission:", created);
-        setSubmissions(created);
         if (!adminPermission) {
             setAttemptNumber(attemptNumber+1);
         }

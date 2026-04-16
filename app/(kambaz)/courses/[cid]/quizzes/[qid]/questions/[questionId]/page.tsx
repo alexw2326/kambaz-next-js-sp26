@@ -8,7 +8,6 @@ import * as client from "../../../../../client";
 export default function QuestionEditor({ question, onClose, onSave }: 
         { question: any; onClose: () => void; onSave: (updated: any) => void; }) {
     const [title, setQuestionTitle] = useState(question?.title || "");
-    const [correctChecked, setCorrectChecked] = useState(false);
     const [questionType, setQuestionType] = useState(question?.questionType || "MULTIPLE CHOICE");
     const [points, setPoints] = useState(question?.points || 0);
     const [questionText, setQuestionText] = useState(question?.questionText || "");
@@ -79,12 +78,12 @@ export default function QuestionEditor({ question, onClose, onSave }:
                     <label>True</label>
                     <input type="radio" name={`correct-${question._id}`} checked={correctAnswer === true}
                             onChange={() => {
-                                { setCorrectAnswer(true); setCorrectChecked(true);}
+                                { setCorrectAnswer(true);}
                             }} className="ms-2" />
                     <label>False</label>
                     <input type="radio" name={`correct-${question._id}`} checked={correctAnswer === false}
                             onChange={() => {
-                                { setCorrectAnswer(false); setCorrectChecked(true);}
+                                { setCorrectAnswer(false);}
                             }} className="ms-2" />
                 </div>
             ) : questionType === "MULTIPLE CHOICE" ? (
@@ -103,7 +102,6 @@ export default function QuestionEditor({ question, onClose, onSave }:
                                 onChange={() => {
                                     const updated = options.map((o, i) => ({ ...o, isCorrect: i === index }));
                                     setOptions(updated)
-                                    setCorrectChecked(true);
                                 }} className="ms-2" />
                             <label className="ms-1">Correct</label>
                             <FaTrash onClick={() => deleteOption(index)}/>
@@ -122,7 +120,6 @@ export default function QuestionEditor({ question, onClose, onSave }:
                                     const updated = [...correctAnswers];
                                     updated[index] = e.target.value;
                                     setCorrectAnswers(updated);
-                                    setCorrectChecked(true)
                                 }}
                             />
                             <FaTrash onClick={() => deleteOption(index)}/>
@@ -130,7 +127,9 @@ export default function QuestionEditor({ question, onClose, onSave }:
                     ))}
                 </div>
             ) : null}
-            <Button className="m-2" onClick={addPotentialAnswer}><FaPlus /> Add Another Answer</Button>
+            {questionType !== "TRUE FALSE" && (
+                <Button className="m-2" onClick={addPotentialAnswer}><FaPlus /> Add Another Answer</Button>
+            )}
             <Button variant="secondary" className="m-2" onClick={onClose}>Cancel</Button>
             <Button variant="danger" className="m-2" onClick={updateQuestion}>Save</Button>
         </div>
