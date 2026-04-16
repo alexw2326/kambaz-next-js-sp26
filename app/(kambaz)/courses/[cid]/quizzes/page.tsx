@@ -75,7 +75,7 @@ export default function Quizzes() {
   return (
     <div className="wd-quizzes">
       {show ? (
-        <QuizEditor handleClose={() => { setShow(false); fetchQuizzes(); }} />
+        <QuizEditor handleClose={() => setShow(false)} createQuiz={onCreateQuiz} />
       ) : (
         <div>
           <QuizzesControls fetchQuizzes={fetchQuizzes} onCreateQuiz={onCreateQuiz} 

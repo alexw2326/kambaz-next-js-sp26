@@ -1,11 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import { useParams, useRouter } from "next/navigation";
 import * as client from "../../../../client";
-export default function QuizDetailsEditor({ handleClose}:
-    { handleClose?: () => void; }
+export default function QuizDetailsEditor({ handleClose, createQuiz}:
+    { handleClose?: () => void; createQuiz?: (quiz: any) => void; }
 ) {
     const { cid, qid } = useParams();
     const router = useRouter();
@@ -47,6 +48,8 @@ export default function QuizDetailsEditor({ handleClose}:
                 ...quiz, 
                 questions: existingQuiz.questions
             }, cid as string);
+        } else {
+            createQuiz?.(quiz);
         }
         close();
     };
@@ -55,6 +58,8 @@ export default function QuizDetailsEditor({ handleClose}:
         const publishedQuiz = { ...quiz, isPublished: true, questions: existingQuiz.questions };
         if (isEditing) {
             await client.updateQuiz(publishedQuiz, cid as string);
+        } else {
+            createQuiz?.(publishedQuiz);
         }
         close();
     };
