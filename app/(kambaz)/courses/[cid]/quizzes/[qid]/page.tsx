@@ -53,6 +53,18 @@ export default function QuizDetails() {
                             <Button variant="secondary" size="lg" className="float-end m-2" id="wd-preview-quiz-btn" onClick={handleStart}>
                                 Preview
                             </Button>
+                            {quiz.isPublished ? (
+                                <Button variant="warning" className="me-2 mb-1" onClick={() => { onTogglePublish(false)}}>
+                                    Unpublish
+                                </Button>
+                            ) : (
+                                <Button variant="success" className="me-2 mb-1" onClick={() => { onTogglePublish(true)}}>
+                                    Publish
+                                </Button>
+                            )}
+                        </div>
+                    ) : (
+                        <div>
                             <h1>{quiz.title}</h1>
                             <h6><b>Quiz Type </b>{quiz.quizType}</h6>
                             <h6><b>Points </b>{quiz.points}</h6>
@@ -70,18 +82,6 @@ export default function QuizDetails() {
                             <h6><b>Available date </b>{new Date(quiz.availableDate).toLocaleString()}</h6>
                             <h6><b>Until date </b>{new Date(quiz.untilDate).toLocaleString()}</h6>
                             <br />
-                            {quiz.isPublished ? (
-                                <Button variant="warning" className="me-2 mb-1" onClick={() => { onTogglePublish(false)}}>
-                                    Unpublish
-                                </Button>
-                            ) : (
-                                <Button variant="success" className="me-2 mb-1" onClick={() => { onTogglePublish(true)}}>
-                                    Publish
-                                </Button>
-                            )}
-                        </div>
-                    ) : (
-                        <div>
                             <Button variant="secondary" size="lg" id="wd-start-quiz-btn" onClick={handleStart}>
                                 Start Quiz
                             </Button>
