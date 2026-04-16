@@ -25,10 +25,15 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
     const [submissionsLoading, setSubmissionsLoading] = useState(true);
     const [outOfAttempts, setOutOfAttempts] = useState(false);
     const fetchSubmissions = async () => {
-        const submission = await client.showAllSubmissionsByUser(cid as string, qid as string, currentUser?._id as string);
-        console.log("submissions for user:", currentUser?._id, submission);
-        setPrevSubmissions(submission);
-        setSubmissionsLoading(false);
+        try {
+            const submission = await client.showAllSubmissionsByUser(cid as string, qid as string, currentUser?._id as string);
+            setPrevSubmissions(submission);
+            setSubmissionsLoading(false);
+        } catch (err) {
+            setPrevSubmissions([]);
+        } finally {
+            setSubmissionsLoading(false);
+        }
     };
     const handleNext = () => {
         setIndex(index+1)
