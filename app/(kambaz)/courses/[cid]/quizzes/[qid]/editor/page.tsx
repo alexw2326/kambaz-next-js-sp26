@@ -15,14 +15,21 @@ export default function QuizEditor({handleClose, createQuiz}:
 ) {
     const { cid, qid } = useParams();
     const [quiz, setQuiz] = useState<any>(null);
+    const [questions, setQuestions] = useState<any[]>([]);
     const searchParams = useSearchParams();
     const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "details");
     const getQuizId = async () => {
         return await client.getQuiz(qid as string, cid as string);
     };
+    const questionPoints = () => {
+        let points = 0;
+        questions.map((q: any) => (points += q.points));
+        return points;
+    }
     useEffect(() => {
         if (qid && qid !== "new") {
             getQuizId().then((data) => setQuiz(data));
+            client.showAllQuestions(cid as string, qid as string).then(setQuestions);
         }
     }, [qid]);
     useEffect(() => {
@@ -48,7 +55,7 @@ export default function QuizEditor({handleClose, createQuiz}:
                         </div>
                     </div>
                     }
-                <h6 className="float-end p-2">Points {quiz?.points || 0}</h6>
+                <h6 className="float-end p-2">Points {questionPoints() || 0}</h6>
             </div>
             <div>
                 <Tabs activeKey={activeTab} onSelect={(k) => setActiveTab(k || "details")} className="mb-3">

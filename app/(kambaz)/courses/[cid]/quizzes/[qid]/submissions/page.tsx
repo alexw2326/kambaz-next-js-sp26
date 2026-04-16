@@ -23,16 +23,13 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
     const [submissions, setSubmissions] = useState<any>();
     const [prevSubmission, setPrevSubmissions] = useState<any[]>([]);
     const [submissionsLoading, setSubmissionsLoading] = useState(true);
+    const [outOfAttempts, setOutOfAttempts] = useState(false);
     const fetchSubmissions = async () => {
         const submission = await client.showAllSubmissionsByUser(cid as string, qid as string, currentUser?._id as string);
         console.log("submissions for user:", currentUser?._id, submission);
         setPrevSubmissions(submission);
         setSubmissionsLoading(false);
     };
-    const findAttempts = () => {
-        const amountPrevSubmissions = prevSubmission.length;
-        return amountPrevSubmissions >= quiz.numAttemptsAllowed;
-    }
     const handleNext = () => {
         setIndex(index+1)
     }
@@ -85,10 +82,10 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
         if (question.questionType === "TRUE FALSE") {
             return question.correctAnswer.toString().toLowerCase() === value;
         } else if (question.questionType === "MULTIPLE CHOICE") {
-            const match = question.options.find((a: any) => a.text.toLowerCase() === value);
+            const match = question.options.find((a: any) => a.text.toLowerCase() === value.toLowerCase());
             return match?.isCorrect ?? false;
         } else if (question.questionType === "FILL BLANK") {
-            return question.correctAnswers.some((a: any) => a.toLowerCase() === value.toLowerCase());
+            return question.correctAnswers.some((a: any) => a === value);
         } else {
             return false;
         }
@@ -108,14 +105,20 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
             setQuestion(questions[index]);
         }
     }, [questions, index]);
+    useEffect(() => {
+        if (!submissionsLoading) {
+            const amountPrevSubmissions = prevSubmission.length;
+            setAttemptNumber(amountPrevSubmissions + 1);
+            setOutOfAttempts(amountPrevSubmissions >= quiz.numAttemptsAllowed);
+        }
+    }, [prevSubmission, submissionsLoading]);
     const isLast = index === questions.length - 1;
     const isFirst = index === 0;
-    if (loading) return <div>Loading questions...</div>;
     if (!question) return <div>No questions found.</div>;
     if (loading || submissionsLoading) return <div>Loading...</div>;
     return (
         <div>
-            {adminPermission || !findAttempts() ? (
+            {adminPermission || !outOfAttempts ? (
                 <div>
                     <h1>{quiz?.title}</h1>
                     <h3>Started: {time}</h3>

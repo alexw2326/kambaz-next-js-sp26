@@ -11,6 +11,7 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
     const { cid, qid } = useParams();
     const router = useRouter();
     const isEditing = qid && qid !== "new";
+    const [timeLimit, setTimeLimit] = useState(false);
     const [quiz, setQuiz] = useState({
         title: "Quiz 1",
         description: "",
@@ -97,21 +98,29 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
                 <option value="UNGRADED SURVEY">Ungraded Survey</option>
             </select> <br /> <br />
             <label>Points</label>
-            <input type="number" min={0} value={quiz.points} onChange={(e) => setQuiz({ ...quiz, points: parseInt(e.target.value) })} /> <br /> <br />
+            <input type="number" min={0} value={quiz.points} onChange={(e) => setQuiz({ ...quiz, points: parseInt(e.target.value) || 0})} /> <br /> <br />
+            <label>Assignment Group</label>
+            <select value={quiz.assignmentGroup} onChange={(e) => setQuiz({ ...quiz, assignmentGroup: e.target.value })}>
+                <option value="QUIZZES">Quizzes</option>
+                <option value="EXAMS">Exams</option>
+                <option value="ASSIGNMENTS">Assignments</option>
+                <option value="PROJECT">Project</option>
+            </select> <br /> <br />
             <label>Shuffle Answers</label>
             <input type="checkbox" checked={quiz.shuffleAnswers} onChange={(e) => setQuiz({ ...quiz, shuffleAnswers: e.target.checked })} /> <br /> <br />
             <label>Time limit</label>
-            <input type="number" min={1} value={quiz.timeLimit} onChange={(e) => setQuiz({ ...quiz, timeLimit: parseInt(e.target.value) })} /> <br /> <br />
+            <input type="checkbox" checked={timeLimit} onChange={() => setTimeLimit(!timeLimit)} /> <br /> <br />
+            {timeLimit && <div><input type="number" min={1} value={quiz.timeLimit} onChange={(e) => setQuiz({ ...quiz, timeLimit: parseInt(e.target.value) || 0})} /> <br /> <br /> </div> }
             <label>Multiple attempts</label>
             <input type="checkbox" checked={quiz.multipleAttempts} onChange={(e) => setQuiz({ ...quiz, multipleAttempts: e.target.checked })} /> <br /> <br />
             {quiz.multipleAttempts && (
                 <div>
                     <label>Number of Attempts Allowed</label>
-                    <input type="number" min={1} value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber })} /> <br /> <br />
+                    <input type="number" min={1} value={quiz.numAttemptsAllowed} onChange={(e) => setQuiz({ ...quiz, numAttemptsAllowed: e.target.valueAsNumber || 1})} /> <br /> <br />
                 </div>
             )}
             <label>Show correct answers</label>
-            <input type="checkbox" checked={quiz.showCorrectAnswers} onChange={(e) => setQuiz({ ...quiz, showCorrectAnswers: e.target.checked })} /> <br /> <br />
+            <input type="checkbox" checked={quiz.showCorrectAnswers} onChange={(e) => setQuiz({ ...quiz, showCorrectAnswers: e.target.checked})} /> <br /> <br />
             <label>Access code</label>
             <input value={quiz.accessCode} onChange={(e) => setQuiz({ ...quiz, accessCode: e.target.value })} /> <br /> <br />
             <label>One question at a time</label>
@@ -130,7 +139,7 @@ export default function QuizDetailsEditor({ handleClose, createQuiz}:
             <input type="checkbox" checked={quiz.isPublished} onChange={(e) => setQuiz({ ...quiz, isPublished: e.target.checked })} /> <br /> <br />
             <Button className="m-2" onClick={handleSave}>Save</Button>
             <Button className="m-2" onClick={handleSaveAndPublish}>Save and Publish</Button>
-            <Button className="m-2" variant="secondary" onClick={handleClose}>Cancel</Button>
+            <Button className="m-2" variant="secondary" onClick={close}>Cancel</Button>
         </div>
     );
 }

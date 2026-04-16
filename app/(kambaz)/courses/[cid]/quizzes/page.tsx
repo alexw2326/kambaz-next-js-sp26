@@ -22,6 +22,7 @@ export default function Quizzes() {
   const { currentUser } = useSelector((state: RootState) => state.accountReducer);
   const currentUserRole = currentUser?.role;
   const adminPermission = currentUserRole === "FACULTY" || currentUserRole === "ADMIN";
+  const [studentScores, setStudentScores] = useState<Record<string, number | null>>({});
   const fetchQuizzes = async () => {
     const quizzes = await client.showAllQuizzes(cid as string);
     dispatch(setQuizzes(quizzes));
@@ -36,7 +37,7 @@ export default function Quizzes() {
   };
   const checkAvailability = (quiz: any) => {
     const now = new Date();
-    const availableFrom = new Date(quiz.availableFrom);
+    const availableFrom = new Date(quiz.availableDate);
     const untilDate = new Date(quiz.untilDate);
     if (now < availableFrom) {
       return "Not available until " + availableFrom.toLocaleDateString();
@@ -58,6 +59,19 @@ export default function Quizzes() {
   useEffect(() => {
     fetchQuizzes();
   }, []);
+  useEffect(() => {
+    if (!adminPermission && quizzes.length > 0) {
+        quizzes.forEach(async (quiz: any) => {
+            const submissions = await client.showAllSubmissionsByUser(
+                cid as string, quiz._id, currentUser?._id as string
+            );
+            if (submissions.length > 0) {
+                const latest = submissions[submissions.length - 1];
+                setStudentScores(prev => ({ ...prev, [quiz._id]: latest.score }));
+            }
+        });
+    }
+  }, [quizzes]);
   return (
     <div className="wd-quizzes">
       {show ? (
@@ -71,30 +85,35 @@ export default function Quizzes() {
             <div className="wd-title p-3 ps-2 bg-secondary w-auto">
               <BsGripVertical className="me-2 fs-3 w-auto" />QUIZZES
             </div>
-            {quizzes.map((quiz: any) => (
-              <ListGroupItem key={quiz._id}>
-                <div className="d-flex justify-content-between align-items-center">
-                  <div>
+            {[...quizzes]
+            .sort((quiz1: any, quiz2: any) => new Date(quiz1.availableDate).getTime() - new Date(quiz2.availableDate).getTime())
+            .map((quiz: any) => {
+              if (!adminPermission && !quiz.isPublished) return null;
+              return (
+                <ListGroupItem key={quiz._id}>
+                  <div className="d-flex justify-content-between align-items-center">
                     <div>
-                      <FaRocket className="me-2" />
-                      <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
-                          className="text-decoration-none text-dark fw-bold">
-                          {quiz.title}
-                      </Link>
+                      <div>
+                        <FaRocket className="me-2" />
+                        <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
+                            className="text-decoration-none text-dark fw-bold">
+                            {quiz.title}
+                        </Link>
+                      </div>
+                      <div className="small text-muted">
+                        <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
+                        {quiz.points} pts
+                        {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
+                        {currentUserRole === "STUDENT" && studentScores[quiz._id] !== undefined ? ` | Score: ${studentScores[quiz._id]}`: ""}
+                      </div>
                     </div>
-                    <div className="small text-muted">
-                      <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
-                      {quiz.points} pts
-                      {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
-                      {currentUserRole === "STUDENT" && quiz.score !== undefined ? ` | Score: ${quiz.score}` : ""}
-                    </div>
+                    <QuizControlButton quizId={quiz._id}
+                      deleteQuizzes={onRemoveQuizzes} isPublished={quiz.isPublished}
+                      onTogglePublish={onTogglePublish} />
                   </div>
-                  <QuizControlButton quizId={quiz._id}
-                    deleteQuizzes={onRemoveQuizzes} isPublished={quiz.isPublished}
-                    onTogglePublish={onTogglePublish} />
-                </div>
-              </ListGroupItem>
-            ))}
+                </ListGroupItem>
+              );
+            })}
           </ListGroup>
         </div>
       )}

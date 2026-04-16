@@ -36,7 +36,10 @@ export default function QuizGraded() {
     const handlePrevious = () => {
         setIndex(index-1)
     }
-    const handleEdit = () => {
+    const handleEdit = async () => {
+        if (adminPermission) {
+            await client.deleteSubmission(qid as string, cid as string, sid as string, currentUser?._id as string)
+        }
         router.push(`/courses/${cid}/quizzes/${qid}/questions`);
     }
     const exitQuiz = async () => {
@@ -103,7 +106,7 @@ export default function QuizGraded() {
                                     <label htmlFor={`mcq-option-${i}`}>{option.text}</label> <br />
                                 </div>
                             ))}
-                            {answers.find(a => a.questionId === question._id)?.isCorrect ? <GreenCheckmark /> : <RedCheck />}
+                            {answers.find(a => a.questionId === question._id)?.isCorrect ? <GreenCheckmark /> : <RedCheck /> }
                         </div>
                     )}
                     {question.questionType === "FILL BLANK" && (

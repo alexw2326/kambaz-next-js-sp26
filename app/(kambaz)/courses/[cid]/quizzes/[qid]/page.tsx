@@ -18,6 +18,15 @@ export default function QuizDetails() {
     const [show, setShow] = useState(false);
     const [quiz, setQuiz] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [startTime, setStartTime] = useState<string>("");
+    const handleStart = () => {
+        setStartTime(new Date().toLocaleTimeString());
+        setShow(true);
+    }
+    const onTogglePublish = async (published: boolean) => {
+        await client.setQuizPublished(qid as string, cid as string, published);
+        setQuiz(quiz._id === qid ? { ...quiz, isPublished: published } : quiz);
+    };
     useEffect(() => {
         if (cid && qid) {
             client.getQuiz(qid as string, cid as string)
@@ -30,13 +39,10 @@ export default function QuizDetails() {
     const handleEdit = () => {
         router.push(`/courses/${cid}/quizzes/${qid}/editor`);
     }
-    const handleStart = () => {
-        setShow(true);
-    }
     return (
         <div>
             {show ? (
-                <QuizPreview quiz={quiz} time={new Date().toLocaleTimeString()} />
+                <QuizPreview quiz={quiz} time={startTime} />
              ) : (
                 <div>
                     {adminPermission? (
@@ -54,16 +60,25 @@ export default function QuizDetails() {
                             <h6><b>Shuffle Answers </b>{quiz.shuffleAnswers ? "Yes" : "No"}</h6>
                             <h6><b>Time Limit </b>{quiz.timeLimit} minutes</h6>
                             <h6><b>Multiple Attempts </b>{quiz.multipleAttempts ? "Yes" : "No"}</h6>
-                            <h6><b>How many attempts </b>{quiz.howManyAttempts}</h6>
+                            <h6><b>How many attempts </b>{quiz.numAttemptsAllowed}</h6>
                             <h6><b>View Responses </b>{quiz.showCorrectAnswers ? "Always" : "Never"}</h6>
                             <h6><b>Access code </b>{quiz.accessCode ? quiz.accessCode : ""}</h6>
                             <h6><b>One Question at a Time </b>{quiz.oneQuestionAtATime ? "Yes" : "No"}</h6>
                             <h6><b>Webcam required </b>{quiz.webcamRequired ? "Yes" : "No"}</h6>
                             <h6><b>Lock Questions After Answering </b>{quiz.lockQuestionsAfterAnswering ? "Yes" : "No"}</h6>
                             <h6><b>Due date </b>{new Date(quiz.dueDate).toLocaleString()}</h6>
-                            <h6><b>Available date </b>{new Date(quiz.availableFrom).toLocaleString()}</h6>
+                            <h6><b>Available date </b>{new Date(quiz.availableDate).toLocaleString()}</h6>
                             <h6><b>Until date </b>{new Date(quiz.untilDate).toLocaleString()}</h6>
                             <br />
+                            {quiz.isPublished ? (
+                                <Button variant="warning" className="me-2 mb-1" onClick={() => { onTogglePublish(false)}}>
+                                    Unpublish
+                                </Button>
+                            ) : (
+                                <Button variant="success" className="me-2 mb-1" onClick={() => { onTogglePublish(true)}}>
+                                    Publish
+                                </Button>
+                            )}
                         </div>
                     ) : (
                         <div>

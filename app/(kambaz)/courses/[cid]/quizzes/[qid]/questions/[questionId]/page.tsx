@@ -2,7 +2,7 @@
 "use client"
 import { useState } from "react";
 import { Dropdown, DropdownMenu, DropdownToggle, DropdownItem, FormControl, FormLabel, Button } from "react-bootstrap"
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaTrash } from "react-icons/fa6";
 import * as client from "../../../../../client";
 
 export default function QuestionEditor({ question, onClose, onSave }: 
@@ -12,7 +12,7 @@ export default function QuestionEditor({ question, onClose, onSave }:
     const [questionType, setQuestionType] = useState(question?.questionType || "MULTIPLE CHOICE");
     const [points, setPoints] = useState(question?.points || 0);
     const [questionText, setQuestionText] = useState(question?.questionText || "");
-    const [correctAnswer, setCorrectAnswer] = useState(question?.correctAnswer || "true");
+    const [correctAnswer, setCorrectAnswer] = useState(question?.correctAnswer ?? true);
     const [options, setOptions] = useState<{text: string, isCorrect: boolean}[]>(question?.options || []);
     const [correctAnswers, setCorrectAnswers] = useState<string[]>(question?.correctAnswers || []);
     const addPotentialAnswer = () => {
@@ -22,6 +22,13 @@ export default function QuestionEditor({ question, onClose, onSave }:
             setCorrectAnswers([...correctAnswers, ""]);
         }
     };
+    const deleteOption = (index: number) => {
+        if (questionType === "MULTIPLE CHOICE") {
+            setOptions(options.filter((_, i) => i !== index));
+        } else if (questionType === "FILL BLANK") {
+            setCorrectAnswers(correctAnswers.filter((_, i) => i !== index));
+        }
+    }
     const updateQuestion = async () => {
         const updated = {
             ...question,
@@ -65,15 +72,20 @@ export default function QuestionEditor({ question, onClose, onSave }:
             <FormControl value={questionText} as="textarea" rows={3} placeholder="Enter question text here" onChange={(e) => setQuestionText(e.target.value)} />
             <h3>Pts</h3>
             <FormControl type="number" min={0} value={points} 
-                onChange={(e) => setPoints(Number(e.target.value))} className="mb-2 w-25" />
+                onChange={(e) => setPoints(Number(e.target.value) || 0)} className="mb-2 w-25" />
             <h3>Answers</h3>
             {questionType === "TRUE FALSE" ? (
                 <div>
-                    <FormLabel>Correct Answer</FormLabel>
-                    <FormControl value={correctAnswer} as="select" className="w-50" onChange={(e) => { setCorrectAnswer(e.target.value); setCorrectChecked(true);}}>
-                        <option value="true">True</option>
-                        <option value="false">False</option>
-                    </FormControl>
+                    <label>True</label>
+                    <input type="radio" name={`correct-${question._id}`} checked={correctAnswer === true}
+                            onChange={() => {
+                                { setCorrectAnswer(true); setCorrectChecked(true);}
+                            }} className="ms-2" />
+                    <label>False</label>
+                    <input type="radio" name={`correct-${question._id}`} checked={correctAnswer === false}
+                            onChange={() => {
+                                { setCorrectAnswer(false); setCorrectChecked(true);}
+                            }} className="ms-2" />
                 </div>
             ) : questionType === "MULTIPLE CHOICE" ? (
                 <div>
@@ -94,6 +106,7 @@ export default function QuestionEditor({ question, onClose, onSave }:
                                     setCorrectChecked(true);
                                 }} className="ms-2" />
                             <label className="ms-1">Correct</label>
+                            <FaTrash onClick={() => deleteOption(index)}/>
                         </div>
                     ))}
                 </div>
@@ -112,15 +125,14 @@ export default function QuestionEditor({ question, onClose, onSave }:
                                     setCorrectChecked(true)
                                 }}
                             />
+                            <FaTrash onClick={() => deleteOption(index)}/>
                         </div>
                     ))}
                 </div>
             ) : null}
             <Button className="m-2" onClick={addPotentialAnswer}><FaPlus /> Add Another Answer</Button>
             <Button variant="secondary" className="m-2" onClick={onClose}>Cancel</Button>
-            {correctChecked && (
-                <Button variant="danger" className="m-2" onClick={updateQuestion}>Save</Button>
-            )}
+            <Button variant="danger" className="m-2" onClick={updateQuestion}>Save</Button>
         </div>
     );
 }
