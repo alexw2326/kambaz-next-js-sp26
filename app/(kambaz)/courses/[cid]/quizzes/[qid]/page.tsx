@@ -65,28 +65,28 @@ export default function QuizDetails() {
                         </div>
                     ) : (
                         <div>
-                            <h1>{quiz.title}</h1>
-                            <h6><b>Quiz Type </b>{quiz.quizType}</h6>
-                            <h6><b>Points </b>{quiz.points}</h6>
-                            <h6><b>Assignment Group </b>{quiz.assignmentGroup}</h6>
-                            <h6><b>Shuffle Answers </b>{quiz.shuffleAnswers ? "Yes" : "No"}</h6>
-                            <h6><b>Time Limit </b>{quiz.timeLimit} minutes</h6>
-                            <h6><b>Multiple Attempts </b>{quiz.multipleAttempts ? "Yes" : "No"}</h6>
-                            <h6><b>How many attempts </b>{quiz.numAttemptsAllowed}</h6>
-                            <h6><b>Show Correct Answers </b>{quiz.showCorrectAnswers ? "Always" : "Never"}</h6>
-                            <h6><b>Access code </b>{quiz.accessCode ? quiz.accessCode : ""}</h6>
-                            <h6><b>One Question at a Time </b>{quiz.oneQuestionAtATime ? "Yes" : "No"}</h6>
-                            <h6><b>Webcam required </b>{quiz.webcamRequired ? "Yes" : "No"}</h6>
-                            <h6><b>Lock Questions After Answering </b>{quiz.lockQuestionsAfterAnswering ? "Yes" : "No"}</h6>
-                            <h6><b>Due date </b>{new Date(quiz.dueDate).toLocaleString()}</h6>
-                            <h6><b>Available date </b>{new Date(quiz.availableDate).toLocaleString()}</h6>
-                            <h6><b>Until date </b>{new Date(quiz.untilDate).toLocaleString()}</h6>
-                            <br />
                             <Button variant="secondary" size="lg" id="wd-start-quiz-btn" onClick={handleStart}>
                                 Start Quiz
                             </Button>
                         </div>
                     )}
+                    <h1>{quiz.title}</h1>
+                    <h6><b>Quiz Type </b>{quiz.quizType}</h6>
+                    <h6><b>Points </b>{quiz.points}</h6>
+                    <h6><b>Assignment Group </b>{quiz.assignmentGroup}</h6>
+                    <h6><b>Shuffle Answers </b>{quiz.shuffleAnswers ? "Yes" : "No"}</h6>
+                    <h6><b>Time Limit </b>{quiz.timeLimit} minutes</h6>
+                    <h6><b>Multiple Attempts </b>{quiz.multipleAttempts ? "Yes" : "No"}</h6>
+                    <h6><b>How many attempts </b>{quiz.numAttemptsAllowed}</h6>
+                    <h6><b>Show Correct Answers </b>{quiz.showCorrectAnswers ? "Always" : "Never"}</h6>
+                    <h6><b>Access code </b>{quiz.accessCode ? quiz.accessCode : ""}</h6>
+                    <h6><b>One Question at a Time </b>{quiz.oneQuestionAtATime ? "Yes" : "No"}</h6>
+                    <h6><b>Webcam required </b>{quiz.webcamRequired ? "Yes" : "No"}</h6>
+                    <h6><b>Lock Questions After Answering </b>{quiz.lockQuestionsAfterAnswering ? "Yes" : "No"}</h6>
+                    <h6><b>Due date </b>{new Date(quiz.dueDate).toLocaleString()}</h6>
+                    <h6><b>Available date </b>{new Date(quiz.availableDate).toLocaleString()}</h6>
+                    <h6><b>Until date </b>{new Date(quiz.untilDate).toLocaleString()}</h6>
+                    <br />
                 </div>
             )}
         </div>
