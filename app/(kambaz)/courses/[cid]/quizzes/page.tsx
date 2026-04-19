@@ -40,12 +40,12 @@ export default function Quizzes() {
     const availableFrom = new Date(quiz.availableDate);
     const untilDate = new Date(quiz.untilDate);
     if (now < availableFrom) {
-      return "Not available until " + availableFrom.toLocaleDateString();
+      return { status: "Not available until " + availableFrom.toLocaleDateString(), available: false };
     }
     if (now > untilDate) {
-      return "Closed";
+      return { status: "Closed", available: false };
     }
-    return "Available";
+    return { status: "Available", available: true };
   };
   const onTogglePublish = async (quizId: string, published: boolean) => {
     await client.setQuizPublished(quizId, cid as string, published);
@@ -88,20 +88,24 @@ export default function Quizzes() {
             {[...quizzes]
             .sort((quiz1: any, quiz2: any) => new Date(quiz1.availableDate).getTime() - new Date(quiz2.availableDate).getTime())
             .map((quiz: any) => {
-              if (!adminPermission && !quiz.isPublished) return null;
+              const { status, available } = checkAvailability(quiz);
               return (
                 <ListGroupItem key={quiz._id}>
                   <div className="d-flex justify-content-between align-items-center">
                     <div>
                       <div>
                         <FaRocket className="me-2" />
-                        <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
-                            className="text-decoration-none text-dark fw-bold">
-                            {quiz.title}
-                        </Link>
+                        {(adminPermission || (quiz.isPublished && available)) ? (
+                          <Link href={`/courses/${cid}/quizzes/${quiz._id}`}
+                              className="text-decoration-none text-dark fw-bold">
+                              {quiz.title}
+                          </Link>
+                        ) : (
+                          quiz.title
+                        )}
                       </div>
                       <div className="small text-muted">
-                        <strong>{checkAvailability(quiz)}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
+                        <strong>{status}</strong> | <strong>Due</strong> {formatDate(quiz.dueDate)} at 12:00 am |
                         {quiz.points} pts
                         {quiz.questions ? ` | ${quiz.questions.length} Questions` : ""}
                         {currentUserRole === "STUDENT" && studentScores[quiz._id] !== undefined ? ` | Score: ${studentScores[quiz._id]}`: ""}

@@ -8,6 +8,7 @@ import * as client from "../../../../client";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/(kambaz)/store";
 import { Button, FormControl } from "react-bootstrap";
+import Link from "next/link";
 
 export default function QuizPreview({ quiz, time }: { quiz: any; time: string }) {
     const { cid, qid } = useParams();
@@ -126,6 +127,16 @@ export default function QuizPreview({ quiz, time }: { quiz: any; time: string })
                     <h1>{quiz?.title}</h1>
                     <h3>Started: {time}</h3>
                     <h1>Quiz Instructions</h1>
+                    <div className="float-end d-flex flex-column">
+                        {questions.map((q: any, idx: number) => (
+                            <span key={q._id ?? idx} className="me-2">
+                                <a href="#" onClick={(e) => {
+                                    e.preventDefault(); setIndex(idx); }} >
+                                    {q.title}
+                                </a>
+                            </span>
+                        ))}
+                    </div>
                     <div>
                         <div className="wd-title p-3 ps-2 bg-secondary w-75 border border-dark border-2 d-flex justify-content-between">
                             <h5 className="float-start">Question {index + 1}</h5>
