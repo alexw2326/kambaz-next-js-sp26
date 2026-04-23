@@ -30,6 +30,7 @@ export default function Quizzes() {
   const onCreateQuiz = async (quiz: any) => {
     const newQuiz = await client.createQuiz(quiz, cid as string);
     dispatch(setQuizzes([...quizzes, newQuiz]));
+    return newQuiz;
   };
   const onRemoveQuizzes = async (quizId: string) => {
     await client.deleteQuiz(quizId, cid as string);
